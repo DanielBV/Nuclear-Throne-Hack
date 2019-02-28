@@ -20,13 +20,25 @@
 </span>
 <!--TODO Change input's name-->
 <div>
-<input type="radio" id="option-end-dead" name="drone" value="dead" [formControl]="endState">
+<input type="radio" id="option-end-dead" name="drone" value={{DEADSTATE}} [formControl]="endState">
   <label for="option-end-dead">Dead</label>
 <div *ngIf="endState.value == 'dead'" class="border">
-  <select [formControl]="deadArea" >
-    <option *ngFor="let area of areas" [value]="area.area">{{area.area}}</option>
-  </select> 
+  <form [formGroup]="deadForm"(change)="updateDeadArea()">
+    <select formControlName="deadArea" >
+      <option *ngFor="let area of getAreas()" [ngValue]="area" >{{area}}</option>
+    </select> 
+    <br/>
+    <select formControlName="deadSubarea"  > 
+      <option  *ngFor="let subarea of getAvailableSubareas()" [ngValue]="subarea">{{subarea.subarea}}</option>
+    </select>
+    <br/>
+    <select formControlName="killedBy"  > 
+      <option  *ngFor="let enemy of getEnemies()" [ngValue]="enemy">{{enemy.name}}</option>
+    </select> 
+  </form>
 </div>
+
+
 </div>
 <input type="radio" id="option-end-win" name="drone" value="win" [formControl]="endState">
 <label for="option-end-win">Win</label>
@@ -37,4 +49,6 @@
 </p>
 
 Checked: {{checked}}
-{{deadArea.value}}
+
+
+A:{{deadForm.controls["deadArea"].value}}b
