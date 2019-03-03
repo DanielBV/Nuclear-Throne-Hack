@@ -10,11 +10,11 @@
   <div>
       <div  class="border" id="dead-form">
        <form [formGroup]="deadForm">
-          <select formControlName="deadArea" (change)="updateDeadArea()">
+          <select formControlName="deadArea">
             <option *ngFor="let area of getAreas()" [ngValue]="area">{{area}}</option>
           </select>
           <br />
-          <select formControlName="deadSubarea" (change)="updateDeadSubarea()">
+          <select formControlName="deadSubarea" >
             <option *ngFor="let subarea of getAvailableSubareas()" [ngValue]="subarea">{{subarea.subarea}}</option>
           </select>
           <br />
@@ -36,11 +36,13 @@
 
   <div id="crown-selector">
     Crowns:
-      <select formControlName="crown" (change)="updateDifficulty()">
+      <select formControlName="crown">
           <option *ngFor="let crown of getAvailableCrowns()" [ngValue]="crown">{{crown.name}}</option>
         </select>
   </div>
 </form>
+<button (click)="open()" class="btn" >pipo</button>
+{{getDifficulty()}}
 
 
 

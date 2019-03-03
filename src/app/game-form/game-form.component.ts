@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {Weapon, Character} from '../model';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {WeaponSelectorModal} from '../weapon-selector/weapon-selector.component';
 
 interface ImprovedArea{
   area: number, subarea:number, loop:number, enemies:Enemy[], baseDifficulty:number
@@ -43,12 +45,12 @@ export class GameFormComponent implements OnInit {
   deadForm:FormGroup;
 //TODO:  CharacterDictionary={1:"Fish",2:"Crystal",3:"Eyes",4:"Melting",5:"Plant",6:"Y.V",7:"Steroids",8:"Robot",9:"Chicken",10:"Rebel",11:"Horror",12:"Rogue"}
                     
-  constructor(private fb:FormBuilder) {
+  constructor(private fb:FormBuilder,private modalService: NgbModal) {
     
     this.deadForm = fb.group({
-      'deadArea':[{area:1,subarea:3},Validators.required], //TODO How to avoid incoherence in the default value if I dont create the areas in the constructor.
-      'deadSubarea':[{value:{area:1,subarea:3,enemies:[]},disabled:true},Validators.required],
-      'killedBy':[{value:null,disabled:true},Validators.required],
+      'deadArea':[1,Validators.required], //TODO How to avoid incoherence in the default value if I dont create the areas in the constructor.
+      'deadSubarea':[null,Validators.required],
+      'killedBy':[{value:null},Validators.required],
       'bskin':[null,null],
       'type':[GameTypeEnum.DAILY,null],
       'character':[null,null],
@@ -63,13 +65,6 @@ export class GameFormComponent implements OnInit {
       return this.deadForm.get("deadArea").value; //TODO Refactor confusing with  getEndingArea
    }
 
-   updateDeadArea():void{
-    this.deadForm.get("deadSubarea").enable();
-   }
-
-   updateDeadSubarea():void{
-     this.deadForm.get("killedBy").enable();
-   }
 
 
    
@@ -77,19 +72,26 @@ export class GameFormComponent implements OnInit {
     this.areas = [{ area: 1, subarea: 1, loop:0,enemies:[{name:"Pipo",id:0}],baseDifficulty:1 },
     { area: 1, subarea: 2, loop:0,enemies:[{name:"Duck",id:1},],baseDifficulty:2 },
     { area: 2, subarea: 1, loop:0,enemies:[{name:"Duck",id:1}], baseDifficulty:3},
-    { area: 3, subarea: 1, loop:0,enemies:[{name:"Quack",id:2}], baseDifficulty:1}
+    { area: 3, subarea: 1, loop:0,enemies:[{name:"Quack",id:2}], baseDifficulty:4}
   
   ]
 
-    this.weapons = [{id:1,difficultyRequired:1,imagePath:"pipochan.com",name:"MegaWeapon"}];
+    this.weapons = [{id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
+  {id:2,difficultyRequired:4,imagePath:"poptheflop",name:"UAAAAAAAAPOOOON"}];
     
     this.characters = ["Fish", "Crystal", "Eyes", "Plant", "Robot", "Stereoids",
       "Melting", "Y.V", "Rebel", "Chicken", "Horror", "Rogue"];
-
-      this.crowns = [{id:0,available_after: {area:1, subarea:1, loop:0, enemies:[], baseDifficulty:1}, name:"Pipo crown",},
+    //TODO: Set default crown
+      this.crowns = [{id:0, available_after:{area:0,subarea:0,loop:0, enemies:[], baseDifficulty:0}, name:"None"},
+        {id:2,available_after: {area:1, subarea:1, loop:0, enemies:[], baseDifficulty:1}, name:"Pipo crown",},
       {id:1,available_after: {area:2, subarea:1, loop:0, enemies:[], baseDifficulty:3}, name:"Mega duper truper pipo crown"}
     
     ];
+   
+    this.deadForm.get("crown").setValue(this.crowns[0]);
+    this.deadForm.get("deadSubarea").setValue(this.areas[0]);
+    this.deadForm.get("character").setValue(this.characters[0]);
+
   }
 //TODO Reset selected crown if area changes?
   getLoop():Number{
@@ -105,7 +107,6 @@ export class GameFormComponent implements OnInit {
   }
 
 
-
   getEnemies():Enemy[]{
     return this.deadForm.get("deadSubarea").value.enemies;
   }
@@ -117,11 +118,7 @@ export class GameFormComponent implements OnInit {
   getAvailableCrowns():Crown[]{
     let area = this.getEndingArea();
     let crowns = [];
-    console.log("AREA:");
-    console.log(area);
     for(let i=0;i<this.crowns.length;i++){
-      console.log("CORONA ");
-      console.log(this.crowns[i].available_after);
       if (this.areaIsAfter(area,this.crowns[i].available_after,false))
         crowns.push(this.crowns[i]);
 
@@ -163,27 +160,42 @@ export class GameFormComponent implements OnInit {
   }
   getDifficulty():number{
     
-      let baseDifficulty = this.getEndingArea().baseDifficulty;
+      let difficulty = this.getEndingArea().baseDifficulty;
       //TODO Make more explicit the character is robot. Enums don't work with object
 
       if (this.getSelectedCharacter().id == 8) //Robot's passive reduces the difficulty number for weapon drops by 1
-        baseDifficulty+=1
+        difficulty+=1
 
-      if (this.getSelectedCrown()!=undefined)  //Having a crown ==> Entering a Crown Vault, which counts as entering a portal and 
+      if (this.getSelectedCrown().id!=0)  //Having a crown ==> Entering a Crown Vault, which counts as entering a portal and 
              //increases the difficulty by one each time you exit them
-          baseDifficulty+=1;
+          difficulty+=1;
 
       if (this.getSelectedCrown().id==11) //Crown of curses increases the probability of getting cursed chests, which include 
-          baseDifficulty+=2;              // weapons of +2 difficulty.
+          difficulty+=2;              // weapons of +2 difficulty.
          
      
     
-
-  
-    // Cursed Chests can contain weapons from 2 difficulties higher
-    return -1;
+    return difficulty;
   }
  
+  getAvailableWeapons(){
+    let weapons = [];
+    let difficulty = this.getDifficulty();
+
+    for (let i=0;i<this.weapons.length;i++){
+      if (difficulty>=this.weapons[i].difficultyRequired)
+        weapons.push(this.weapons[i]);
+
+    }
+
+    return weapons;
+    //TODO add specific character weapons
+  }
+  open() {
+    const modalRef = this.modalService.open(WeaponSelectorModal);
+    modalRef.componentInstance.weapons = this.getAvailableWeapons();
+  }
+
   typeOf(x){
     return typeof(x);
   }

@@ -5,15 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { GameFormComponent } from './game-form/game-form.component';
-import { WeaponSelectorComponent,NgbdModalContent } from './weapon-selector/weapon-selector.component';
+import { WeaponSelectorModal } from './weapon-selector/weapon-selector.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
     AppComponent,
     GameFormComponent,
-    WeaponSelectorComponent,
-    NgbdModalContent
+    WeaponSelectorModal
   
   ],
   imports: [
@@ -22,7 +21,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ReactiveFormsModule,
     NgbModule 
   ],
-  entryComponents: [NgbdModalContent],
+  entryComponents: [WeaponSelectorModal],
   providers: [],
   bootstrap: [AppComponent]
 })
