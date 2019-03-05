@@ -27,7 +27,7 @@
 
   <div id="character-selector">
       <select formControlName="character">
-        <option *ngFor="let chara of characters" [value]="chara"  >{{chara}}</option>
+        <option *ngFor="let chara of characters" [ngValue]="chara"  >{{chara.name}}</option>
       </select>
       <input type="checkbox" id="bskin" formControlName="bskin">
       <label for="bskin">Bskin</label>
@@ -40,10 +40,15 @@
           <option *ngFor="let crown of getAvailableCrowns()" [ngValue]="crown">{{crown.name}}</option>
         </select>
   </div>
+  <div id="ultramutation-selector">
+    Ultramutations:
+  <select formControlName="ultramutation">
+    <option *ngFor="let ultmut of getAvailableUltraMutations()" [ngValue]="ultmut">{{ultmut.name}}</option>
+  </select>
+</div>
 </form>
 <button (click)="open()" class="btn" >pipo</button>
-{{getDifficulty()}}
-
+<button (click)=openMutations() class="btn">Select Mutations</button>
 
 
 

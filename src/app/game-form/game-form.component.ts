@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {Weapon, Character} from '../model';
+import {Weapon, Character, UltraMutation} from '../model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {WeaponSelectorModal} from '../weapon-selector/weapon-selector.component';
-
+import {MutationSelectorComponent} from '../mutation-selector/mutation-selector.component';
 interface ImprovedArea{
   area: number, subarea:number, loop:number, enemies:Enemy[], baseDifficulty:number
 }
@@ -25,6 +25,8 @@ enum GameTypeEnum{
 }
 
 
+
+
 @Component({
   selector: 'app-game-form',
   templateUrl: './game-form.component.html',
@@ -37,9 +39,11 @@ export class GameFormComponent implements OnInit {
   bskin = new FormControl('');
   GameType=GameTypeEnum;
 
+  noneUltra = {id:0,name:"None"};
+
   areas:ImprovedArea[];
   crowns:Crown[];
-  characters: String[];
+  characters:Character[];
   weapons:Weapon[];
   
   deadForm:FormGroup;
@@ -55,6 +59,7 @@ export class GameFormComponent implements OnInit {
       'type':[GameTypeEnum.DAILY,null],
       'character':[null,null],
       'crown':[null,null],
+      'ultramutation':[null,Validators.required]
     });
 
 
@@ -79,8 +84,19 @@ export class GameFormComponent implements OnInit {
     this.weapons = [{id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
   {id:2,difficultyRequired:4,imagePath:"poptheflop",name:"UAAAAAAAAPOOOON"}];
     
-    this.characters = ["Fish", "Crystal", "Eyes", "Plant", "Robot", "Stereoids",
-      "Melting", "Y.V", "Rebel", "Chicken", "Horror", "Rogue"];
+    this.characters = [
+      {id:0,name:"Fish",iconPath:"",startingWeapon:{id:0,name:"Pipo",difficultyRequired:0,imagePath:""},
+      ultramutations:[{
+        id:1,name:"Ultra1Fish"},{
+          id:2,name:"Ultra2Fish"}]
+      },
+      {id:1,name:"Pepo",iconPath:"",startingWeapon:{id:0,name:"Pipo",difficultyRequired:0,imagePath:""},
+      ultramutations:[{
+        id:1,name:"Ultra2Pepo"},{
+          id:2,name:"Ultra2Pepo"}]
+      }
+
+    ];
     //TODO: Set default crown
       this.crowns = [{id:0, available_after:{area:0,subarea:0,loop:0, enemies:[], baseDifficulty:0}, name:"None"},
         {id:2,available_after: {area:1, subarea:1, loop:0, enemies:[], baseDifficulty:1}, name:"Pipo crown",},
@@ -91,6 +107,7 @@ export class GameFormComponent implements OnInit {
     this.deadForm.get("crown").setValue(this.crowns[0]);
     this.deadForm.get("deadSubarea").setValue(this.areas[0]);
     this.deadForm.get("character").setValue(this.characters[0]);
+    this.deadForm.get("ultramutation").setValue(this.noneUltra);
 
   }
 //TODO Reset selected crown if area changes?
@@ -194,6 +211,18 @@ export class GameFormComponent implements OnInit {
   open() {
     const modalRef = this.modalService.open(WeaponSelectorModal);
     modalRef.componentInstance.weapons = this.getAvailableWeapons();
+  }
+
+  openMutations() {
+    const modalRef = this.modalService.open(MutationSelectorComponent);
+    modalRef.componentInstance.weapons = this.getAvailableWeapons();
+  }
+
+  getAvailableUltraMutations():UltraMutation[]{
+    let ultra = this.getSelectedCharacter().ultramutations.slice();
+    console.log(ultra);
+    ultra.unshift(this.noneUltra);
+    return ultra;
   }
 
   typeOf(x){
