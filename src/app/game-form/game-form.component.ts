@@ -40,11 +40,14 @@ export class GameFormComponent implements OnInit {
   GameType=GameTypeEnum;
 
   noneUltra = {id:0,name:"None"};
+  noneWeapon:Weapon = {difficultyRequired:0,id:0,imagePath:"",name:"None"};
 
   areas:ImprovedArea[];
   crowns:Crown[];
   characters:Character[];
   weapons:Weapon[];
+  primaryWeapon:Weapon;
+  secondaryWeapon:Weapon;
   
   deadForm:FormGroup;
 //TODO:  CharacterDictionary={1:"Fish",2:"Crystal",3:"Eyes",4:"Melting",5:"Plant",6:"Y.V",7:"Steroids",8:"Robot",9:"Chicken",10:"Rebel",11:"Horror",12:"Rogue"}
@@ -62,7 +65,8 @@ export class GameFormComponent implements OnInit {
       'ultramutation':[null,Validators.required]
     });
 
-
+    this.primaryWeapon = this.noneWeapon;
+    this.secondaryWeapon = this.noneWeapon;
  
    }
 
@@ -208,7 +212,13 @@ export class GameFormComponent implements OnInit {
     return weapons;
     //TODO add specific character weapons
   }
-  open() {
+
+  openPrimaryWeaponSelector() {
+    const modalRef = this.modalService.open(WeaponSelectorModal);
+    modalRef.componentInstance.weapons = this.getAvailableWeapons();
+  }
+
+  openSecondaryWeaponSelector() {
     const modalRef = this.modalService.open(WeaponSelectorModal);
     modalRef.componentInstance.weapons = this.getAvailableWeapons();
   }

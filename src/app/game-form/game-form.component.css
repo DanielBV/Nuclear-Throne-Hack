@@ -3,3 +3,8 @@
   border-width: 1px;
 
 }
+
+.weapon-btn,.end-dropdown{
+  margin-left: 20px;
+  margin-right:20px;
+}

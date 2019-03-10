@@ -8,17 +8,18 @@
     <label for="option-weekly">Weekly</label>
   </div>
   <div>
+      End State:
       <div  class="border" id="dead-form">
        <form [formGroup]="deadForm">
-          <select formControlName="deadArea">
+        Area:<select formControlName="deadArea" class="end-dropdown">
             <option *ngFor="let area of getAreas()" [ngValue]="area">{{area}}</option>
           </select>
           <br />
-          <select formControlName="deadSubarea" >
+        Subarea:<select formControlName="deadSubarea" class="end-dropdown" >
             <option *ngFor="let subarea of getAvailableSubareas()" [ngValue]="subarea">{{subarea.subarea}}</option>
           </select>
           <br />
-          <select formControlName="killedBy">
+        Killed by:<select formControlName="killedBy" class="end-dropdown">
             <option *ngFor="let enemy of getEnemies()" [ngValue]="enemy">{{enemy.name}}</option>
           </select>
         </form>
@@ -26,7 +27,7 @@
     </div>
 
   <div id="character-selector">
-      <select formControlName="character">
+      Character: <select formControlName="character" class="end-dropdown">
         <option *ngFor="let chara of characters" [ngValue]="chara"  >{{chara.name}}</option>
       </select>
       <input type="checkbox" id="bskin" formControlName="bskin">
@@ -47,7 +48,14 @@
   </select>
 </div>
 </form>
-<button (click)="open()" class="btn" >pipo</button>
+<div id="weapon-selector">
+  <div>
+    Primary weapon: {{primaryWeapon.name}}<button (click)="openPrimaryWeaponSelector()" type="button" class="btn btn-secondary btn-sm weapon-btn" >Primary Weapon</button>
+  </div>
+<div>
+    Secondary Weapon: {{secondaryWeapon.name}}<button (click)="openSecondaryWeaponSelector()" type="button" class="btn btn-secondary btn-sm weapon-btn" >Secondary Weapon</button>
+</div>
+</div>
 <button (click)=openMutations() class="btn">Select Mutations</button>
 
 
