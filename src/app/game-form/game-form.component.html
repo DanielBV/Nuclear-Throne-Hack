@@ -1,27 +1,46 @@
 
-
+ <div id="game-form">
 <form id="form" [formGroup]="deadForm">
   <div id="daily-weekly-selector">
-    <input type="radio" id="option-daily" name="type" [value]="GameType.DAILY" formControlName="type">
-    <label for="option-daily">Daily</label>
-    <input type="radio" id="option-weekly" name="type" [value]="GameType.WEEKLY" formControlName="type">
-    <label for="option-weekly">Weekly</label>
+    Game Type:
+    <span id="option-daily">
+    <input type="radio" id="inp-option-daily" name="type" [value]="GameType.DAILY" formControlName="type">
+    <label for="inp-option-daily">Daily</label>
+    </span>
+    <span  id="option-weekly">
+    <input type="radio" id="inp-option-weekly" name="type" [value]="GameType.WEEKLY" formControlName="type">
+    <label for="inp-option-weekly">Weekly</label>
+  </span>
   </div>
   <div>
-      End State:
+      <h6>Ending Conditions:</h6>
       <div  class="border" id="dead-form">
-       <form [formGroup]="deadForm">
-        Area:<select formControlName="deadArea" class="end-dropdown">
-            <option *ngFor="let area of getAreas()" [ngValue]="area">{{area}}</option>
-          </select>
-          <br />
-        Subarea:<select formControlName="deadSubarea" class="end-dropdown" >
-            <option *ngFor="let subarea of getAvailableSubareas()" [ngValue]="subarea">{{subarea.subarea}}</option>
-          </select>
-          <br />
-        Killed by:<select formControlName="killedBy" class="end-dropdown">
-            <option *ngFor="let enemy of getEnemies()" [ngValue]="enemy">{{enemy.name}}</option>
-          </select>
+       <form [formGroup]="deadForm"> <!-- TODO Delete this?-->
+       
+         <table>
+            <tr>
+              <td>Area:</td>
+              <td><select formControlName="deadArea" class="end-dropdown">
+                  <option *ngFor="let area of getAreas()" [ngValue]="area">{{area}}</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Subarea:</td>
+              <td> <select formControlName="deadSubarea" class="end-dropdown" >
+                  <option *ngFor="let subarea of getAvailableSubareas()" [ngValue]="subarea">{{subarea.subarea}}</option>
+                </select>
+              </td>
+            </tr>
+            <tr>
+              <td>Killed By:</td>
+              <td>
+                  <select formControlName="killedBy" class="end-dropdown">
+                      <option *ngFor="let enemy of getEnemies()" [ngValue]="enemy">{{enemy.name}}</option>
+                    </select>
+              </td>
+            </tr>
+        </table>
         </form>
       </div>
     </div>
@@ -58,5 +77,5 @@
 </div>
 <button (click)=openMutations() class="btn">Select Mutations</button>
 
-
+</div>
 

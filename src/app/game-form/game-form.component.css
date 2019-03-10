@@ -1,10 +1,37 @@
 .border {
     border-style: solid;
   border-width: 1px;
+  padding: 13px 8px;
 
 }
 
-.weapon-btn,.end-dropdown{
+.weapon-btn{
   margin-left: 20px;
+  margin-top:3px;
   margin-right:20px;
+  margin-bottom: 3px;
+
+}
+#game-form{
+  width: 50%;
+  margin: 0 auto;
+}
+
+#option-daily{
+  margin-left:3%;
+}
+
+#option-weekly{
+  margin-left:5%;
+}
+
+table{
+  border-collapse: inherit;
+  border-spacing: 10px 0;
+  width: 75%;
+  margin: 0 auto;
+}
+
+.end-dropdown{
+  width:100%;
 }
