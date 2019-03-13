@@ -12,12 +12,12 @@
     <label for="inp-option-weekly">Weekly</label>
   </span>
   </div>
-  <div>
+  <div id="container-ending-conditions">
       <h6>Ending Conditions:</h6>
       <div  class="border" id="dead-form">
        <form [formGroup]="deadForm"> <!-- TODO Delete this?-->
        
-         <table>
+         <table id="table-ending-conditions">
             <tr>
               <td>Area:</td>
               <td><select formControlName="deadArea" class="end-dropdown">
@@ -45,37 +45,54 @@
       </div>
     </div>
 
-  <div id="character-selector">
-      Character: <select formControlName="character" class="end-dropdown">
-        <option *ngFor="let chara of characters" [ngValue]="chara"  >{{chara.name}}</option>
-      </select>
-      <input type="checkbox" id="bskin" formControlName="bskin">
-      <label for="bskin">Bskin</label>
-      
-  </div>
+    <table >
+        <tr>
+          <td> Character: </td>
+    
+          <td><span>
+             <select formControlName="character" >
+                  <option *ngFor="let chara of characters" [ngValue]="chara"  >{{chara.name}}</option>
+                </select>
+               
+              </span>
+              </td>
+              <td><input type="checkbox" id="bskin-checkbox" formControlName="bskin">  B-skin</td>
+        </tr>
+        <tr>
+          <td> Crowns:</td>
+          <td> <select formControlName="crown">
+              <option *ngFor="let crown of getAvailableCrowns()" [ngValue]="crown">{{crown.name}}</option>
+            </select></td>
+        </tr>
+        <tr>
+          <td>Ultramutations:</td>
+          <td> <select formControlName="ultramutation">
+              <option *ngFor="let ultmut of getAvailableUltraMutations()" [ngValue]="ultmut">{{ultmut.name}}</option>
+            </select></td>
+        </tr>
 
-  <div id="crown-selector">
-    Crowns:
-      <select formControlName="crown">
-          <option *ngFor="let crown of getAvailableCrowns()" [ngValue]="crown">{{crown.name}}</option>
-        </select>
-  </div>
-  <div id="ultramutation-selector">
-    Ultramutations:
-  <select formControlName="ultramutation">
-    <option *ngFor="let ultmut of getAvailableUltraMutations()" [ngValue]="ultmut">{{ultmut.name}}</option>
-  </select>
-</div>
+        <tr>
+          <td>Primary weapon: </td>
+          <td><button (click)="openPrimaryWeaponSelector()" type="button" class="btn btn-secondary btn-sm weapon-btn" >Primary Weapon</button> </td>
+          <td>Selected: {{primaryWeapon.name}}</td>
+        </tr>
+
+        <tr>
+            <td>Secondary Weapon:</td>
+            <td><button (click)="openSecondaryWeaponSelector()" type="button" class="btn btn-secondary btn-sm weapon-btn" >Secondary Weapon</button></td>
+            <td>Selected: {{secondaryWeapon.name}}</td>
+        </tr>
+        
+        <tr>
+          <td>Mutations Left: {{getMutationsLeft()}}</td>
+        <td>
+            <button (click)=openMutations() class="btn btn-secondary btn-sm">Select Mutations</button>
+           </td>
+          </tr>
+    </table>
+
+ 
 </form>
-<div id="weapon-selector">
-  <div>
-    Primary weapon: {{primaryWeapon.name}}<button (click)="openPrimaryWeaponSelector()" type="button" class="btn btn-secondary btn-sm weapon-btn" >Primary Weapon</button>
-  </div>
-<div>
-    Secondary Weapon: {{secondaryWeapon.name}}<button (click)="openSecondaryWeaponSelector()" type="button" class="btn btn-secondary btn-sm weapon-btn" >Secondary Weapon</button>
-</div>
-</div>
-<button (click)=openMutations() class="btn">Select Mutations</button>
 
 </div>
 

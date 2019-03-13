@@ -235,6 +235,11 @@ export class GameFormComponent implements OnInit {
     return ultra;
   }
 
+  getMutationsLeft():number{
+    /** TODO Fake implementation */
+    return 0;
+  }
+
   typeOf(x){
     return typeof(x);
   }

@@ -25,13 +25,34 @@
   margin-left:5%;
 }
 
-table{
+#table-ending-conditions{
   border-collapse: inherit;
   border-spacing: 10px 0;
   width: 75%;
   margin: 0 auto;
 }
+#container-ending-conditions{
+   margin-bottom: 10px;
+}
 
+
+#pepo{
+ 
+  margin:auto auto;
+  text-align: left;
+
+}
 .end-dropdown{
-  width:100%;
+  width: 100%;
+}
+
+table{
+  border-collapse: separate;
+  border-spacing: 50px 10px;
+ 
+}
+
+.btn{
+  margin:0px;
+  margin-right:20px;
 }
