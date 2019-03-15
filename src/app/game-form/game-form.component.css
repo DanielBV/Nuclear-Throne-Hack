@@ -36,12 +36,6 @@
 }
 
 
-#pepo{
- 
-  margin:auto auto;
-  text-align: left;
-
-}
 .end-dropdown{
   width: 100%;
 }
@@ -55,4 +49,15 @@ table{
 .btn{
   margin:0px;
   margin-right:20px;
+}
+
+#game-form{
+ 
+  margin-top:30px;
+}
+
+
+.lg{
+  max-width: 1000px;
+  height:500px;
 }

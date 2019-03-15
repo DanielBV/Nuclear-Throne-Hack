@@ -1,5 +1,6 @@
 
- <div id="game-form">
+<div id="container">
+<div id="game-form">
 <form id="form" [formGroup]="deadForm">
   <div id="daily-weekly-selector">
     Game Type:
@@ -64,12 +65,7 @@
               <option *ngFor="let crown of getAvailableCrowns()" [ngValue]="crown">{{crown.name}}</option>
             </select></td>
         </tr>
-        <tr>
-          <td>Ultramutations:</td>
-          <td> <select formControlName="ultramutation">
-              <option *ngFor="let ultmut of getAvailableUltraMutations()" [ngValue]="ultmut">{{ultmut.name}}</option>
-            </select></td>
-        </tr>
+        
 
         <tr>
           <td>Primary weapon: </td>
@@ -95,4 +91,4 @@
 </form>
 
 </div>
-
+</div>
