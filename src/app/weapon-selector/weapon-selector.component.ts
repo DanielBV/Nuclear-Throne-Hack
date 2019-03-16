@@ -12,12 +12,11 @@ export class WeaponSelectorModal {
   
   _selectedWeapon:Weapon;
   @Input() weapons:Weapon[];
+  @Input() headerText:string;
 
   selectedWeaponForm= new FormControl();
   
-  constructor(public activeModal: NgbActiveModal) {
-  
-    
+  constructor(public activeModal: NgbActiveModal) {  
   }
 
   

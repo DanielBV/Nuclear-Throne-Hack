@@ -20,6 +20,8 @@
 .modal-header{
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 #container-exit-button{

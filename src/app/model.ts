@@ -12,3 +12,9 @@ export interface Weapon{
     id:number,
     difficultyRequired:number,
 }
+
+export interface Mutation{
+    name:string,
+    imagePath:string,
+    id:number,
+}

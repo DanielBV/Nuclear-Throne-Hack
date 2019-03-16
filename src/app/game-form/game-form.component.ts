@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {Weapon, Character} from '../model';
+import {Weapon, Character,Mutation} from '../model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {WeaponSelectorModal} from '../weapon-selector/weapon-selector.component';
 import {MutationSelectorComponent} from '../mutation-selector/mutation-selector.component';
@@ -47,6 +47,7 @@ export class GameFormComponent implements OnInit {
   weapons:Weapon[];
   primaryWeapon:Weapon;
   secondaryWeapon:Weapon;
+  selectedMutations:Mutation[];
   
   deadForm:FormGroup;
 //TODO:  CharacterDictionary={1:"Fish",2:"Crystal",3:"Eyes",4:"Melting",5:"Plant",6:"Y.V",7:"Steroids",8:"Robot",9:"Chicken",10:"Rebel",11:"Horror",12:"Rogue"}
@@ -65,7 +66,7 @@ export class GameFormComponent implements OnInit {
 
     this.primaryWeapon = this.noneWeapon;
     this.secondaryWeapon = this.noneWeapon;
- 
+    this.selectedMutations = [];
    }
 
    getDeadArea():number{
@@ -83,25 +84,25 @@ export class GameFormComponent implements OnInit {
   
   ]
 
-    this.weapons = [{id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"pipo.com",name:"MegaWeapon"},
+    this.weapons = [{id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
+    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
   {id:2,difficultyRequired:4,imagePath:"poptheflop",name:"UAAAAAAAAPOOOON"}];
     
     this.characters = [
@@ -226,6 +227,7 @@ export class GameFormComponent implements OnInit {
   openPrimaryWeaponSelector() {
     const modalRef = this.modalService.open(WeaponSelectorModal, { size: 'lg' });
     modalRef.componentInstance.selectedWeapon = this.primaryWeapon;
+    modalRef.componentInstance.headerText= "Select Primary Weapon";
     modalRef.componentInstance.weapons = this.getAvailableWeapons();
 
     modalRef.result.then((result) => {
@@ -237,6 +239,7 @@ export class GameFormComponent implements OnInit {
   openSecondaryWeaponSelector() {
     const modalRef = this.modalService.open(WeaponSelectorModal, { size: 'lg' });
     modalRef.componentInstance.weapons = this.getAvailableWeapons();
+    modalRef.componentInstance.headerText= "Select Secondary Weapon";
     modalRef.componentInstance.selectedWeapon = this.secondaryWeapon;
     modalRef.result.then((result) => {
       this.secondaryWeapon = result;
@@ -244,14 +247,17 @@ export class GameFormComponent implements OnInit {
   }
 
   openMutations() {
+    console.log(this.selectedMutations);
     const modalRef = this.modalService.open(MutationSelectorComponent, { size: 'lg' });
-    modalRef.componentInstance.weapons = this.getAvailableWeapons();
+    modalRef.componentInstance.activeMutations = this.selectedMutations; 
+    modalRef.result.then((result) => {
+      this.selectedMutations = result;
+    });
   }
 
-
+  
 
   getMutationsLeft():number{
-    /** TODO Fake implementation */
     return 0;
   }
 
