@@ -250,15 +250,19 @@ export class GameFormComponent implements OnInit {
     console.log(this.selectedMutations);
     const modalRef = this.modalService.open(MutationSelectorComponent, { size: 'lg' });
     modalRef.componentInstance.activeMutations = this.selectedMutations; 
+    modalRef.componentInstance.numberOfMutations = this.getNumOfAllowedMutations();
     modalRef.result.then((result) => {
       this.selectedMutations = result;
     });
   }
 
-  
+  getNumOfAllowedMutations():number{
+    return 3;
+  }
 
   getMutationsLeft():number{
-    return 0;
+   
+    return this.getNumOfAllowedMutations()-this.selectedMutations.length;
   }
 
   typeOf(x){

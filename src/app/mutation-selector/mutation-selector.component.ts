@@ -25,13 +25,29 @@ export class MutationSelectorComponent implements OnInit {
 
     this.controls = [];
     this.mutations = mutationService.getMutations();
-    this.mutations.map(element=>this.controls.push(new FormControl())); 
+    this.mutations.map(element=>this.controls.push(new FormControl()));
+    this.controls.forEach(con => con.valueChanges.subscribe( (value)=> this.checkRemainingMutations(value))) 
   }
 
   ngOnInit() {
   
 
   }
+
+
+  checkRemainingMutations(value){
+    
+    if (this.getRemainingMutations()<=0)
+      this.controls.forEach((con) => {
+        if (!con.disabled && !con.value)
+          con.disable();
+      })
+    else
+      this.controls.forEach((con) => {
+        if (con.disabled)
+          con.enable();
+  })
+};
 
   updateActiveMutations(active:Mutation[]){
     active.forEach(element => 
@@ -57,7 +73,7 @@ export class MutationSelectorComponent implements OnInit {
 
   getRemainingMutations(){
     /**TODO */
-    return 8;
+    return this.numberOfMutations-this.getSelectedMutations().length;
   }
 
   getSelectedMutations(){

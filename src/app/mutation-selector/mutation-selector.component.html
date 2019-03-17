@@ -3,9 +3,9 @@
   <div class="grid-container">
     <div class="grid-item" *ngFor="let control of controls;let i=index;">
         <span class="weapon-item">
-            <img  (click)="control.setValue(!control.value);"  [src]="mutations[i].imagePath"><br/>
+            <img  (click)="mutationCheckbox.click();"  [src]="mutations[i].imagePath"><br/>
             <span>
-            <label><input type="checkbox" name="weapon" [formControl]="control" > {{mutations[i].name}}</label>
+            <label><input type="checkbox" name="mutation" [formControl]="control" #mutationCheckbox> {{mutations[i].name}}</label>
           </span>
           </span>
     </div>
