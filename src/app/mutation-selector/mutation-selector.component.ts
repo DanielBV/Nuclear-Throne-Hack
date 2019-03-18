@@ -27,6 +27,8 @@ export class MutationSelectorComponent implements OnInit {
     this.mutations = mutationService.getMutations();
     this.mutations.map(element=>this.controls.push(new FormControl()));
     this.controls.forEach(con => con.valueChanges.subscribe( (value)=> this.checkRemainingMutations(value))) 
+    this.findControl(this.mutationService.getHeavyHeartMutation()).disable({emitEvent:false});
+
   }
 
   ngOnInit() {
@@ -36,30 +38,54 @@ export class MutationSelectorComponent implements OnInit {
 
 
   checkRemainingMutations(value){
-    
+    this.checkHeavyHeartAllowed();
     if (this.getRemainingMutations()<=0)
       this.controls.forEach((con) => {
         if (!con.disabled && !con.value)
-          con.disable();
+          con.disable({emitEvent:false});
       })
-    else
+    else{
       this.controls.forEach((con) => {
         if (con.disabled)
-          con.enable();
-  })
-};
+          con.enable({emitEvent:false});
+   } );
+   this.checkHeavyHeartAllowed();
+}};
+
+
+  checkHeavyHeartAllowed(){
+    let specific = this.mutationService.getWeaponSpecificMutations();
+    let numWeaponSpecificMut = specific.filter((mut)=> this.getSelectedMutations().indexOf(mut)!=-1).length;
+    
+    let hhControl = this.findControl(this.mutationService.getHeavyHeartMutation());
+    if (numWeaponSpecificMut>=3 && hhControl.disabled){
+      hhControl.enable({emitEvent:false});
+    }
+
+    if(numWeaponSpecificMut<3 && !hhControl.disabled){
+      hhControl.setValue(false,{emitEvent:false});
+      hhControl.disable({emitEvent:false});
+    }
+
+  }
+
+  findControl(mutation: Mutation):FormControl{
+      let i = this.mutations.indexOf(mutation);
+      if (i===-1)
+        throw new Error('Mutation ' + mutation.id + ' not found');
+ 
+      return this.controls[i];
+  }
 
   updateActiveMutations(active:Mutation[]){
     active.forEach(element => 
-      {
-        let i = this.mutations.indexOf(element);
-        this.controls[i].setValue(true);
+       {
+        this.findControl(element).setValue(true);
       }
   )};
 
 
   @Input() set activeMutations(value: Mutation[]) {
-    console.log("PIPO" + this.controls);
     this._activeMutations = value;
     this.updateActiveMutations(value);
 

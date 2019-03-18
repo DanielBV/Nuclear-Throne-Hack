@@ -257,7 +257,7 @@ export class GameFormComponent implements OnInit {
   }
 
   getNumOfAllowedMutations():number{
-    return 3;
+    return 5;
   }
 
   getMutationsLeft():number{
