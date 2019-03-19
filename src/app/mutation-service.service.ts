@@ -7,6 +7,7 @@ const BOLT_MARROW_ID = 21;
 const BOILING_VEINS_ID = 14;
 const LASER_BRAIN_ID =17;
 const LONG_ARM_ID = 13;
+const PATIENCE_ID = 25;
 
 @Injectable({
   providedIn: 'root'
@@ -62,6 +63,10 @@ export class MutationService {
       return [this.mutations[RECYCLE_GLAND_ID], this.mutations[SHOTGUN_SHOULDERS_ID], this.mutations[BOLT_MARROW_ID],
       this.mutations[BOILING_VEINS_ID], this.mutations[LASER_BRAIN_ID], this.mutations[LONG_ARM_ID]];
 
+  }
+
+  getPatience():Mutation{
+    return this.mutations[PATIENCE_ID];
   }
 
 

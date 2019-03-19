@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {Weapon, Character,Mutation} from '../model';
+import {Weapon, Character,Mutation, getNumOfRemainingMutations} from '../model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {WeaponSelectorModal} from '../weapon-selector/weapon-selector.component';
 import {MutationSelectorComponent} from '../mutation-selector/mutation-selector.component';
@@ -262,7 +262,7 @@ export class GameFormComponent implements OnInit {
 
   getMutationsLeft():number{
    
-    return this.getNumOfAllowedMutations()-this.selectedMutations.length;
+    return getNumOfRemainingMutations(this.getNumOfAllowedMutations(),this.selectedMutations);
   }
 
   typeOf(x){

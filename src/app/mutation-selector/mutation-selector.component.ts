@@ -2,7 +2,7 @@ import { Component, OnInit, Input} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import {FormControl} from '@angular/forms';
 import {MutationService} from '../mutation-service.service';
-import {Mutation} from '../model';
+import {Mutation,getNumOfRemainingMutations} from '../model';
 
 
 @Component({
@@ -39,9 +39,10 @@ export class MutationSelectorComponent implements OnInit {
 
   checkRemainingMutations(value){
     this.checkHeavyHeartAllowed();
+    let patienceControl =  this.findControl(this.mutationService.getPatience());
     if (this.getRemainingMutations()<=0)
       this.controls.forEach((con) => {
-        if (!con.disabled && !con.value)
+        if (!con.disabled && !con.value && con!==patienceControl)
           con.disable({emitEvent:false});
       })
     else{
@@ -50,6 +51,7 @@ export class MutationSelectorComponent implements OnInit {
           con.enable({emitEvent:false});
    } );
    this.checkHeavyHeartAllowed();
+
 }};
 
 
@@ -98,8 +100,8 @@ export class MutationSelectorComponent implements OnInit {
   }
 
   getRemainingMutations(){
-    /**TODO */
-    return this.numberOfMutations-this.getSelectedMutations().length;
+    return  getNumOfRemainingMutations(this.numberOfMutations, this.getSelectedMutations());
+
   }
 
   getSelectedMutations(){
