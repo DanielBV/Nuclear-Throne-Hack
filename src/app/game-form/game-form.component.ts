@@ -1,23 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {Weapon, Character,Mutation, getNumOfRemainingMutations} from '../model';
+import {Crown, Enemy,crowns, ImprovedArea,weapons,characters,Weapon, Character,Mutation, getNumOfRemainingMutations} from '../model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {WeaponSelectorModal} from '../weapon-selector/weapon-selector.component';
 import {MutationSelectorComponent} from '../mutation-selector/mutation-selector.component';
-interface ImprovedArea{
-  area: number, subarea:number, loop:number, enemies:Enemy[], baseDifficulty:number
-}
 
-interface Enemy{
-  name:string,
-  id:number
-}
 
-interface Crown{
-  id:number,
-  name:string,
-  available_after:ImprovedArea
-}
+
 
 enum GameTypeEnum{
   DAILY="daily",
@@ -84,41 +73,10 @@ export class GameFormComponent implements OnInit {
   
   ]
 
-    this.weapons = [{id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-    {id:1,difficultyRequired:1,imagePath:"assets/images/weapons/AutoFlameShotgun.png",name:"MegaWeapon"},
-  {id:2,difficultyRequired:4,imagePath:"poptheflop",name:"UAAAAAAAAPOOOON"}];
-    
-    this.characters = [
-      {id:0,name:"Fish",iconPath:"",startingWeapon:{id:0,name:"Pipo",difficultyRequired:0,imagePath:""},
-      
-      },
-      {id:1,name:"Pepo",iconPath:"",startingWeapon:{id:0,name:"Pipo",difficultyRequired:0,imagePath:""},
-      }
-
-    ];
+    this.weapons = weapons;
+    this.characters = characters;
     //TODO: Set default crown
-      this.crowns = [{id:0, available_after:{area:0,subarea:0,loop:0, enemies:[], baseDifficulty:0}, name:"None"},
-        {id:2,available_after: {area:1, subarea:1, loop:0, enemies:[], baseDifficulty:1}, name:"Pipo crown",},
-      {id:1,available_after: {area:2, subarea:1, loop:0, enemies:[], baseDifficulty:3}, name:"Mega duper truper pipo crown"}
-    
-    ];
+      this.crowns = crowns;
    
     this.deadForm.get("crown").setValue(this.crowns[0]);
     this.deadForm.get("deadSubarea").setValue(this.areas[0]);
