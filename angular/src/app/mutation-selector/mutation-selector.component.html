@@ -1,0 +1,17 @@
+<div id="main-container">
+  <h3>Select {{getRemainingMutations()}} mutations</h3>
+  <div class="grid-container">
+    <div class="grid-item" *ngFor="let control of controls;let i=index;">
+        <span class="weapon-item">
+            <img  (click)="mutationCheckbox.click();" height="100" width="100"  [src]="mutations[i].imagePath"><br/>
+            <span>
+            <label><input type="checkbox" name="mutation" [formControl]="control" #mutationCheckbox> {{mutations[i].name}}</label>
+          </span>
+          </span>
+    </div>
+  </div> 
+  <span id="container-exit-button">
+  <button  id="exit-button" class="btn btn-primary" (click)="closeWindow()">Select Mutations</button>
+  </span>
+</div>
+
