@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import {Character,Weapon, Crown, characters, crowns, weapons} from './model';
+import {Character,Weapon, Crown, characters, getCrown, getWeapon} from './model';
 import { HttpClient } from '@angular/common/http';
-
+import { Observable, of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 
 interface DailySeedInfo{
   seed:number;
@@ -25,20 +26,35 @@ export class WeeklyDataService {
 
   test:WeeklySeedInfo;
   constructor(private http: HttpClient) {
-    let algo = this.http.get("api/v1/todos/").subscribe((pipo)=>{
-
-      console.log(pipo);
-    console.log(typeof(pipo));   
-
-    });
+    /** TODO Rename api */
+   
+  
    
     
   }
 
-  getWeeklyInfo(): WeeklySeedInfo{
-    return {enforceBSkin:true, bskin:true, 
-      crown:crowns[1],character:characters[3],startWep:weapons[15], enabled:false};
+  getWeeklyInfo(): Observable<WeeklySeedInfo>{
+    return this.http.get("api/v1/todos/").pipe(
+      mergeMap(
+       
+        (pipo)=>{
+        pipo =pipo["weekly"];
+        return of({enforceBSkin:true, bskin: "1"===pipo["bskin"], 
+        crown:getCrown(parseInt(pipo["crown"],10)),character:characters[parseInt(pipo["char"],10)-1],startWep: getWeapon(parseInt(pipo["startwep"],10)), enabled:pipo["active"]==='true'})
+      
+      })
+      );
     
+    /*(mergeMap(pipo:any)=>{
+
+      console.log(pipo);
+    console.log(typeof(pipo));   
+    return  {enforceBSkin:true, bskin: "1"===pipo.bskin, 
+    crown:crowns[parseInt(pipo.crown,10)],character:characters[parseInt(pipo.char,10)-1],startWep:weapons[0], enabled:pipo.active==="true"};
+  
+
+    }));*/
+
   }
 }
 

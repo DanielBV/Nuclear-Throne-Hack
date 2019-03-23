@@ -41,7 +41,7 @@ export class GameFormComponent implements OnInit {
   weekly_data:WeeklySeedInfo;
   
   deadForm:FormGroup;
-//TODO:  CharacterDictionary={1:"Fish",2:"Crystal",3:"Eyes",4:"Melting",5:"Plant",6:"Y.V",7:"Steroids",8:"Robot",9:"Chicken",10:"Rebel",11:"Horror",12:"Rogue"}
+
                     
   constructor(private fb:FormBuilder,private modalService: NgbModal,dailyWeeklyData: WeeklyDataService) {
     
@@ -58,11 +58,18 @@ export class GameFormComponent implements OnInit {
     this.primaryWeapon = this.noneWeapon;
     this.secondaryWeapon = this.noneWeapon;
     this.selectedMutations = [];
-    this.weekly_data = dailyWeeklyData.getWeeklyInfo();
-    if (!this.weekly_data.enabled)
-      this.disableWeekly();
-    
-    /** TODO Disable weekly if there isn't a weekly yet */
+    dailyWeeklyData.getWeeklyInfo().subscribe(
+      
+      (data)=>{
+        console.log("PIPO");
+        this.weekly_data=data;
+        console.log(this.weekly_data);
+        if (!this.weekly_data.enabled)
+        this.disableWeekly();}
+      
+      
+      );
+  
    }
 
 
@@ -134,14 +141,18 @@ export class GameFormComponent implements OnInit {
     this.areas = [{ area: 1, subarea: 1, loop:0,enemies:[{name:"Pipo",id:0}],baseDifficulty:1 },
     { area: 1, subarea: 2, loop:0,enemies:[{name:"Duck",id:1},],baseDifficulty:2 },
     { area: 2, subarea: 1, loop:0,enemies:[{name:"Duck",id:1}], baseDifficulty:3},
-    { area: 3, subarea: 1, loop:0,enemies:[{name:"Quack",id:2}], baseDifficulty:4}
+    { area: 3, subarea: 1, loop:0,enemies:[{name:"Quack",id:2}], baseDifficulty:4},
+    { area: 3, subarea: 2, loop:0,enemies:[{name:"Quack",id:2}], baseDifficulty:5},
+    { area: 3, subarea: 3, loop:0,enemies:[{name:"Quack",id:2}], baseDifficulty:6},
+    { area: 4, subarea: 1, loop:0,enemies:[{name:"Quack",id:2}], baseDifficulty:7}
+  
+  
   
   ]
 
     this.weapons = weapons;
     this.characters = characters;
-    //TODO: Set default crown
-      this.crowns = crowns;
+    this.crowns = crowns;
    
     this.deadForm.get("crown").setValue(this.crowns[0]);
     this.deadForm.get("deadSubarea").setValue(this.areas[0]);
@@ -152,7 +163,7 @@ export class GameFormComponent implements OnInit {
     this.deadForm.get("crown").valueChanges.subscribe(()=>this.assertConsistentData());
     this.deadForm.get("character").valueChanges.subscribe(()=>this.assertConsistentData);
   }
-//TODO Reset selected crown if area changes?
+
   getLoop():Number{
     return 0;
   }

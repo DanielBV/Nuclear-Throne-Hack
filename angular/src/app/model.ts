@@ -7,11 +7,21 @@ export interface Crown{
     available_after:ImprovedArea
   }
 
-
-export var crowns:Crown[] = [{id:0, available_after:{area:0,subarea:0,loop:0, enemies:[], baseDifficulty:0}, name:"None"},
-{id:2,available_after: {area:1, subarea:1, loop:0, enemies:[], baseDifficulty:1}, name:"Pipo crown",},
-{id:1,available_after: {area:2, subarea:1, loop:0, enemies:[], baseDifficulty:3}, name:"Mega duper truper pipo crown"}
-
+/* TODO get Areas instead of creating new area objects */
+/** Base difficulty for crowns is 1 because getting a crown implies going through the crown vault portal. Increasing the difficulty in 1. */
+export var crowns:Crown[] = [{id:1, available_after:{area:0,subarea:0,loop:0, enemies:[], baseDifficulty:0}, name:"None"},
+{id:2,available_after: {area:3, subarea:2, loop:1, enemies:[], baseDifficulty:1}, name:"Crown of Death"},
+{id:3,available_after: {area:3, subarea:2, loop:0, enemies:[], baseDifficulty:1}, name:"Crown of Life",},
+{id:4,available_after: {area:3, subarea:2, loop:0, enemies:[], baseDifficulty:1}, name:"Crown of Haste"},
+{id:5,available_after: {area:3, subarea:2, loop:0, enemies:[], baseDifficulty:1}, name:"Crown of Guns"},
+{id:6,available_after: {area:3, subarea:2, loop:1, enemies:[], baseDifficulty:1}, name:"Crown of Hatred"},
+{id:7,available_after: {area:3, subarea:2, loop:1, enemies:[], baseDifficulty:1}, name:"Crown of Blood"},
+{id:8,available_after: {area:3, subarea:2, loop:0, enemies:[], baseDifficulty:1}, name:"Crown of Destiny"},
+{id:9,available_after: {area:3, subarea:2, loop:1, enemies:[], baseDifficulty:1}, name:"Crown of Love"},
+{id:10, available_after: {area:3, subarea:2, loop:0, enemies:[], baseDifficulty:1}, name:"Crown of Risk"},
+{id:11, available_after: {area:3, subarea:2, loop:0, enemies:[], baseDifficulty:3}, name:"Crown of Curses"},
+{id:12, available_after: {area:3, subarea:2, loop:1, enemies:[], baseDifficulty:1}, name:"Crown of Luck"},
+{id:13, available_after: {area:3, subarea:2, loop:1, enemies:[], baseDifficulty:1}, name:"Crown of Protection"},
 ];
 
 export interface Character{
@@ -143,6 +153,26 @@ export var weapons:Weapon[] = [
 {id:92, imagePath:"assets/images/weapons/UltraShovel.png", name:"Ultra Shovel", difficultyRequired:19},
 {id:120, imagePath:"assets/images/weapons/FrogPistol.png", name:"Frog Pistol", difficultyRequired:20},
 ];
+
+
+export function getCrown(id:number):Crown{
+    for(let i=0;i<crowns.length;i++){
+        if(crowns[i].id===id){
+            return crowns[i];
+        }
+    }
+    return null;
+
+}
+
+export function getWeapon(id:number):Weapon{
+    for(let i=0;i<weapons.length;i++){
+        if(weapons[i].id===id){
+            return weapons[i];
+        }
+    }
+    return null;
+}
 
 /** TODO Remove revolver from game form
  * 
