@@ -222,6 +222,7 @@ export interface ImprovedArea{
 
 export interface Enemy{
     name:string,
-    id:number
+    id:number,
+    imagePath:string,
   }
   
