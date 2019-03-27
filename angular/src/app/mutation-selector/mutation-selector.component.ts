@@ -13,8 +13,8 @@ import {Mutation,getNumOfRemainingMutations} from '../model';
 export class MutationSelectorComponent implements OnInit {
 
 
-  @Input() numberOfMutations:number;
-  @Input() _activeMutations: Mutation[];
+  _numberOfMutations:number;
+   _activeMutations: Mutation[];
   @Input() mutations: Mutation[];
 
   controls:FormControl[];
@@ -26,9 +26,10 @@ export class MutationSelectorComponent implements OnInit {
     this.controls = [];
     this.mutations = mutationService.getMutations();
     this.mutations.map(element=>this.controls.push(new FormControl()));
-    this.controls.forEach(con => con.valueChanges.subscribe( (value)=> this.checkRemainingMutations(value)));
+    this.controls.forEach(con => con.valueChanges.subscribe( (value)=> this.checkRemainingMutations()));
     this.findControl(this.mutationService.getHeavyHeartMutation()).disable({emitEvent:false});
 
+    
   }
 
   ngOnInit() {
@@ -37,11 +38,12 @@ export class MutationSelectorComponent implements OnInit {
   }
 
 
-  checkRemainingMutations(value){
+  checkRemainingMutations(){
     this.checkHeavyHeartAllowed();
     let patienceControl =  this.findControl(this.mutationService.getPatience());
     if (this.getRemainingMutations()<=0)
       this.controls.forEach((con) => {
+      
         if (!con.disabled && !con.value && con!==patienceControl)
           con.disable({emitEvent:false});
       })
@@ -90,10 +92,20 @@ export class MutationSelectorComponent implements OnInit {
   @Input() set activeMutations(value: Mutation[]) {
     this._activeMutations = value;
     this.updateActiveMutations(value);
+    this.checkRemainingMutations();
 
  }
 
-  get selectedWeapon(): Mutation[] {
+ @Input() set numberOfMutations(value:number){
+   this._numberOfMutations = value;
+   this.checkRemainingMutations();
+ }
+
+ get numberOfMutations(){
+    return this._numberOfMutations;
+ }
+
+  get activeMutations(): Mutation[] {
 
       return this._activeMutations;
 
@@ -116,7 +128,6 @@ export class MutationSelectorComponent implements OnInit {
   } 
 
   closeWindow(){
-    console.log(this.controls);
     this.activeModal.close(this.getSelectedMutations());
   }
 }

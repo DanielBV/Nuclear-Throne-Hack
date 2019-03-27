@@ -3,7 +3,8 @@
   <div class="grid-container">
     <div class="grid-item" *ngFor="let wep of weapons">
         <span class="weapon-item">
-            <img height="26" (click)="selectedWeaponForm.setValue(wep);" width="59" [src]="wep.imagePath"><br/>
+
+            <img *ngIf="wep.imagePath!=null" height="26" (click)="selectedWeaponForm.setValue(wep);" width="59" [src]="wep.imagePath"><br/>
             <span>
             <label><input type="radio" name="weapon" [value]="wep" [formControl]="selectedWeaponForm"> {{wep.name}}</label>
           </span>
