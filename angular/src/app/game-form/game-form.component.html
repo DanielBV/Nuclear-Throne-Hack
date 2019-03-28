@@ -16,7 +16,7 @@
   <div id="container-ending-conditions">
       <h6>Ending Conditions:</h6>
       <div  class="border" id="dead-form">
-       <form [formGroup]="deadForm"> <!-- TODO Delete this?-->
+
        
          <table id="table-ending-conditions">
             <tr>
@@ -42,7 +42,6 @@
               </td>
             </tr>
         </table>
-        </form>
       </div>
     </div>
 
@@ -87,7 +86,7 @@
           </tr>
     </table>
 
- 
+ <button id="enter-button" (click)="openConfirmationBox()"class="btn btn-primary">Enter</button>
 </form>
 
 </div>

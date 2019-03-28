@@ -1,20 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import {Crown, Enemy,crowns, ImprovedArea,weapons,characters,Weapon, Character,Mutation, getNumOfRemainingMutations,areas} from '../model';
+import {Crown, Enemy,crowns, ImprovedArea,weapons,characters,Weapon, Character,Mutation,FinalData, getNumOfRemainingMutations,areas, GameTypeEnum} from '../model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {WeaponSelectorModal} from '../weapon-selector/weapon-selector.component';
 import {MutationSelectorComponent} from '../mutation-selector/mutation-selector.component';
 import {WeeklyDataService,WeeklySeedInfo} from '../weekly-data.service';
+import {ConfirmationBoxComponent} from '../confirmation-box/confirmation-box.component';
 
 
 const CROWN_OF_DESTINY_ID = 8;
-
-enum GameTypeEnum{
-  DAILY="daily",
-  WEEKLY="weekly"
-}
-
-
 
 
 @Component({
@@ -61,9 +55,7 @@ export class GameFormComponent implements OnInit {
     dailyWeeklyData.getWeeklyInfo().subscribe(
       
       (data)=>{
-        console.log("PIPO");
         this.weekly_data=data;
-        console.log(this.weekly_data);
         if (!this.weekly_data.enabled)
         this.disableWeekly();}
       
@@ -138,6 +130,9 @@ export class GameFormComponent implements OnInit {
       return this.deadForm.get("deadArea").value; //TODO Refactor confusing with  getEndingArea
    }
 
+   getGameType():GameTypeEnum{
+     return this.deadForm.get("type").value;
+   }
    /** TODO: Añadir armas que solo se pueden coger una vez (no se pueden tener como primary y secondary weapon a la vez) */
 
    
@@ -288,13 +283,36 @@ export class GameFormComponent implements OnInit {
   }
 
   openMutations() {
-    console.log(this.selectedMutations);
     const modalRef = this.modalService.open(MutationSelectorComponent, { size: 'lg' });
     modalRef.componentInstance.activeMutations = this.selectedMutations; 
     modalRef.componentInstance.numberOfMutations = this.getNumOfAllowedMutations();
     modalRef.result.then((result) => {
       this.selectedMutations = result;
     });
+  }
+
+  openConfirmationBox(){
+    const modalRef = this.modalService.open(ConfirmationBoxComponent, { size: 'lg' });
+    let area = this.getEndingArea();
+    let data:FinalData = {area:area.area,subarea:area.subarea,loop:area.loop,bskin:this.hasBskin(),charlevel:this.getNumOfAllowedMutations()+1,
+    character:this.getSelectedCharacter(),crown:this.getSelectedCrown(),kills:this.getKills(),seq:null,lasthit:this.getLastHit(),
+  mutations:this.selectedMutations,primaryWeapon:this.primaryWeapon,secondaryWeapon:this.secondaryWeapon,type:this.getGameType(),
+  win:false};
+
+  modalRef.componentInstance.data = data;
+
+    /** TODO getKills y seq */
+  }
+
+  getKills():number{
+    return 1000; /**TODO */
+  }
+  getLastHit():Enemy{
+    return this.deadForm.get("killedBy").value;
+
+  }
+  hasBskin():boolean{
+    return this.deadForm.get("bskin").value;
   }
 
   getNumOfAllowedMutations():number{

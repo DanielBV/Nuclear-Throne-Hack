@@ -1,0 +1,31 @@
+
+<div id="container">
+  <h1>Confirm the game</h1>
+  <div id="game-form-results">
+      <p>Character: {{getCharacterName()}} <img [src]="getCharacterImage()"/> Bskin: {{hasBskin()}}</p>
+      <div>
+        <span>
+           {{getEndingArea()}}
+        </span>
+        <span>
+          Killed by {{getLastHitName()}} <img [src]="getLastHitIcon()"/>
+        </span>
+      </div>
+      <div>
+        Killed {{getEnemiesKilled()}} enemies.
+      </div>
+      <div>
+        <span>Primary Weapon: {{getPrimaryWeaponName()}}  <img [src]="getPrimaryWeaponImage()"/></span>
+        <span>Secondary Weapon: {{getSecondaryWeaponName()}} <img [src]="getSecondaryWeaponImage()"/></span>
+      </div>
+
+      <div id="mutations">
+        <span *ngFor="let mut of getMutations()">
+          {{mut.name}}
+          <img height=40 width=20 [src]="mut.imagePath"/>
+        </span>
+      </div>
+  </div>
+
+
+</div>
