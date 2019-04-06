@@ -268,7 +268,7 @@ export class GameFormComponent implements OnInit {
 
     modalRef.result.then((result) => {
       this.primaryWeapon = result;
-    });
+    }).catch(excp =>{});
   
   }
 
@@ -279,7 +279,7 @@ export class GameFormComponent implements OnInit {
     modalRef.componentInstance.selectedWeapon = this.secondaryWeapon;
     modalRef.result.then((result) => {
       this.secondaryWeapon = result;
-    });
+    }).catch(excp =>{});
   }
 
   openMutations() {
@@ -288,7 +288,7 @@ export class GameFormComponent implements OnInit {
     modalRef.componentInstance.numberOfMutations = this.getNumOfAllowedMutations();
     modalRef.result.then((result) => {
       this.selectedMutations = result;
-    });
+    }).catch(excp =>{});
   }
 
   openConfirmationBox(){
@@ -305,7 +305,10 @@ export class GameFormComponent implements OnInit {
   }
 
   getKills():number{
-    return 1000; /**TODO */
+    let minKills = this.getEndingArea().minKills;
+    let maxKills = this.getEndingArea().maxKills;
+
+    return Math.floor(Math.random() * minKills) + maxKills;
   }
   getLastHit():Enemy{
     return this.deadForm.get("killedBy").value;
