@@ -34,13 +34,13 @@ export class WeeklyDataService {
   }
 
   getWeeklyInfo(): Observable<WeeklySeedInfo>{
-    return this.http.get("api/v1/todos/").pipe(
+    return this.http.get("api/weeklydata").pipe(
       mergeMap(
        
-        (pipo)=>{
-        pipo =pipo["weekly"];
-        return of({enforceBSkin:true, bskin: "1"===pipo["bskin"], 
-        crown:getCrown(parseInt(pipo["crown"],10)),character:characters[parseInt(pipo["char"],10)-1],startWep: getWeapon(parseInt(pipo["startwep"],10)), enabled:pipo["active"]==='true'})
+        (data)=>{
+        data =data["weekly"];
+        return of({enforceBSkin:true, bskin: "1"===data["bskin"], 
+        crown:getCrown(parseInt(data["crown"],10)),character:characters[parseInt(data["char"],10)-1],startWep: getWeapon(parseInt(data["startwep"],10)), enabled:data["active"]==='true'})
       
       })
       );

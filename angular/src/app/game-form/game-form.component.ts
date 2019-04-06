@@ -40,7 +40,7 @@ export class GameFormComponent implements OnInit {
   constructor(private fb:FormBuilder,private modalService: NgbModal,dailyWeeklyData: WeeklyDataService) {
     
     this.deadForm = fb.group({
-      'deadArea':[1,Validators.required], //TODO How to avoid incoherence in the default value if I dont create the areas in the constructor.
+      'deadArea':[1,Validators.required], 
       'deadSubarea':[null,Validators.required],
       'killedBy':[{value:null},Validators.required],
       'bskin':[null,null],

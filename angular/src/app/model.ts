@@ -214,10 +214,6 @@ export function getWeapon(id: number): Weapon {
     return null;
 }
 
-/** TODO Remove revolver from game form
- * 
- * - Divide weapons into two: All and obtainable
- */
 export var characters: Character[] = [
     { id: 1, name: "Fish", iconPath: "assets/images/characters/fish.png", startingWeapon: weapons[1] },
     { id: 2, name: "Crystal", iconPath: "assets/images/characters/crystal.png", startingWeapon: weapons[1] },

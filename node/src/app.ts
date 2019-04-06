@@ -6,12 +6,12 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
-app.use(express.static(__dirname + "/../../angular/dist"));
+app.use(express.static(__dirname));
 const request = require('request');
 
 
 var test:any = null;
-app.get('/api/v1/todos', (req, res) => {
+app.get('/api/weeklydata', (req, res) => {
 	
 	if (test===null){
 		request("http://tb-api.xyz/seed/weekly", { json: true }, (err:any, apiRes:any, body:any) => {
@@ -38,7 +38,7 @@ app.get('/api/v1/todos', (req, res) => {
 
 
 app.get("/*",function(req,res){
-	res.sendFile("index.html",{root: __dirname});
+	res.sendFile("index.html",{root: __dirname+"dist"});
 });
 
 
