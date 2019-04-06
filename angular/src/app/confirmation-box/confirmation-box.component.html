@@ -1,31 +1,40 @@
 
 <div id="container">
-  <h1>Confirm the game</h1>
-  <div id="game-form-results">
-      <p>Character: {{getCharacterName()}} <img [src]="getCharacterImage()"/> Bskin: {{hasBskin()}}</p>
-      <div>
-        <span>
-           {{getEndingArea()}}
-        </span>
-        <span>
-          Killed by {{getLastHitName()}} <img [src]="getLastHitIcon()"/>
-        </span>
-      </div>
-      <div>
-        Killed {{getEnemiesKilled()}} enemies.
-      </div>
-      <div>
-        <span>Primary Weapon: {{getPrimaryWeaponName()}}  <img [src]="getPrimaryWeaponImage()"/></span>
-        <span>Secondary Weapon: {{getSecondaryWeaponName()}} <img [src]="getSecondaryWeaponImage()"/></span>
-      </div>
+  <div>
+    <h1>Confirm the game</h1>
+    <div id="game-form-results">
+        <p>Character: {{getCharacterName()}} <img [src]="getCharacterImage()"/> Bskin: {{hasBskin()}}</p>
+        <div>
+          <div>
+            {{getEndingAreaLabel()}}
+          </div>
+          <span>
+            Killed by <img [src]="getLastHitIcon()"/> - {{getLastHitName()}} 
+          </span>
+        </div>
+        <div>
+          Killed: {{getEnemiesKilled()}} enemies.
+        </div>
+        <div>
+          <span>Primary Weapon: {{getPrimaryWeaponName()}}  <img height="25" *ngIf="getPrimaryWeaponImage()!=null" [src]="getPrimaryWeaponImage()"/></span>
+          <span>Secondary Weapon: {{getSecondaryWeaponName()}} <img height="25" *ngIf="getSecondaryWeaponImage()!=null" [src]="getSecondaryWeaponImage()"/></span>
+        </div>
 
-      <div id="mutations">
-        <span *ngFor="let mut of getMutations()">
-          {{mut.name}}
-          <img height=40 width=20 [src]="mut.imagePath"/>
-        </span>
-      </div>
+        <div *ngIf="getMutations().size>0"id="mutations">
+          Mutations:<br/>
+          <span class="mutation" *ngFor="let mut of getMutations()">
+            <img height=30 width=25 [src]="mut.imagePath"/>
+          </span>
+        </div>
+    </div>
   </div>
+
+<div id="submit">
+  <input type="text" id="steam-id" class="form-control confirm" placeholder="Your steam id"/>
+
+
+  <button id="enter-button" (click)="confirm()"class="btn btn-primary confirm">Confirm</button>
+</div>
 
 
 </div>

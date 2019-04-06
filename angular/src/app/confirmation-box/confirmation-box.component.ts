@@ -40,7 +40,7 @@ export class ConfirmationBoxComponent implements OnInit {
     return this.data.lasthit.imagePath;
   }
 
-  getEndingArea():string{
+  getEndingAreaLabel():string{
     return `Loop ${this.data.loop} - Area ${this.data.area}-${this.data.subarea}`
   }
 

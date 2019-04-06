@@ -1,0 +1,23 @@
+
+#container {
+    margin: 30px;
+}
+
+#steam-id{
+    margin:10px;
+}
+
+.pipo{
+    display: flex;
+    align-items: left;
+    flex-direction: column;
+    width: 100%;
+  }
+.confirm{
+    width:100%;
+    margin: 0px 0px 10px 0px  !important;
+
+}
+#submit{
+    margin-top:30px;
+}
