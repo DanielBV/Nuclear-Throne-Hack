@@ -9,7 +9,7 @@ import {ConfirmationBoxComponent} from '../confirmation-box/confirmation-box.com
 
 
 const CROWN_OF_DESTINY_ID = 8;
-
+const CHICKEN_ID = 9;
 
 @Component({
   selector: 'app-game-form',
@@ -33,7 +33,7 @@ export class GameFormComponent implements OnInit {
   secondaryWeapon:Weapon;
   selectedMutations:Mutation[];
   weekly_data:WeeklySeedInfo;
-  
+  errorMessage:string;
   deadForm:FormGroup;
 
                     
@@ -42,11 +42,11 @@ export class GameFormComponent implements OnInit {
     this.deadForm = fb.group({
       'deadArea':[1,Validators.required], 
       'deadSubarea':[null,Validators.required],
-      'killedBy':[{value:null},Validators.required],
+      'killedBy':[null,Validators.required],
       'bskin':[null,null],
-      'type':[GameTypeEnum.DAILY,null],
-      'character':[null,null],
-      'crown':[null,null],
+      'type':[GameTypeEnum.DAILY,Validators.required],
+      'character':[null,Validators.required],
+      'crown':[null,Validators.required],
     });
 
     this.primaryWeapon = this.noneWeapon;
@@ -118,7 +118,6 @@ export class GameFormComponent implements OnInit {
    }
 
    setSelectedCrown(crown:Crown){
-     console.log(this.getAvailableCrowns().includes(this.crowns[0]));
      this.deadForm.get("crown").setValue(crown);
    }
 
@@ -291,6 +290,40 @@ export class GameFormComponent implements OnInit {
     }).catch(excp =>{});
   }
 
+  enterPressed(){
+    let valid = true;
+    this.errorMessage = "";
+    this.assertConsistentData();
+    if (this.getLastHit()==null){
+      this.errorMessage = "Error: Last Hit/Killed By required";
+      valid = false;
+    }
+
+    if(this.primaryWeapon==this.noneWeapon && this.secondaryWeapon==this.noneWeapon && this.getSelectedCharacter().id!=CHICKEN_ID){
+      this.errorMessage = "Error: The only character that can end without weapons is Chicken";
+      valid = false;
+    }
+    let mutLeft = this.getMutationsLeft();
+    if(mutLeft>0){
+      this.errorMessage = `Error: You must select ${mutLeft} mutations more`;
+      valid = false;
+    }
+
+    if(mutLeft<0){
+      this.errorMessage = "Error: Selected too many mutations";
+      valid = false;
+    }
+    
+    if(!this.getAvailableSubareas().includes(this.getEndingArea())){
+      this.errorMessage = "Error: You must select a subarea";
+      valid = false;
+    }
+    if(valid){
+      this.openConfirmationBox();
+    }
+
+
+  }
   openConfirmationBox(){
     const modalRef = this.modalService.open(ConfirmationBoxComponent, { size: 'lg' });
     let area = this.getEndingArea();

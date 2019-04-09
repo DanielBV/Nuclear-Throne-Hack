@@ -84,9 +84,10 @@
             <button (click)=openMutations() class="btn btn-secondary btn-sm">Select Mutations</button>
            </td>
           </tr>
-    </table>
+        </table>
+  <p class="text-danger">{{errorMessage}}</p>
 
- <button id="enter-button" (click)="openConfirmationBox()"class="btn btn-primary">Enter</button>
+ <button id="enter-button" (click)="enterPressed()" class="btn btn-primary">Enter</button>
 </form>
 
 </div>

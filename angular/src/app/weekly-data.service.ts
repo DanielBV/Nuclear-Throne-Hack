@@ -44,17 +44,6 @@ export class WeeklyDataService {
       
       })
       );
-    
-    /*(mergeMap(pipo:any)=>{
-
-      console.log(pipo);
-    console.log(typeof(pipo));   
-    return  {enforceBSkin:true, bskin: "1"===pipo.bskin, 
-    crown:crowns[parseInt(pipo.crown,10)],character:characters[parseInt(pipo.char,10)-1],startWep:weapons[0], enabled:pipo.active==="true"};
-  
-
-    }));*/
-
   }
 }
 
