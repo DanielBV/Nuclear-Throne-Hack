@@ -4,7 +4,7 @@ import {Crown, Enemy,crowns, ImprovedArea,weapons,characters,Weapon, Character,M
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {WeaponSelectorModal} from '../weapon-selector/weapon-selector.component';
 import {MutationSelectorComponent} from '../mutation-selector/mutation-selector.component';
-import {WeeklyDataService,WeeklySeedInfo} from '../weekly-data.service';
+import {GameDataService,WeeklyInfo, DailyInfo} from '../weekly-data.service';
 import {ConfirmationBoxComponent} from '../confirmation-box/confirmation-box.component';
 
 
@@ -32,12 +32,13 @@ export class GameFormComponent implements OnInit {
   primaryWeapon:Weapon;
   secondaryWeapon:Weapon;
   selectedMutations:Mutation[];
-  weekly_data:WeeklySeedInfo;
+  weekly_data:WeeklyInfo;
+  daily_data:DailyInfo;
   errorMessage:string;
   deadForm:FormGroup;
 
                     
-  constructor(private fb:FormBuilder,private modalService: NgbModal,dailyWeeklyData: WeeklyDataService) {
+  constructor(private fb:FormBuilder,private modalService: NgbModal,private gameData: GameDataService) {
     
     this.deadForm = fb.group({
       'deadArea':[1,Validators.required], 
@@ -47,21 +48,27 @@ export class GameFormComponent implements OnInit {
       'type':[GameTypeEnum.DAILY,Validators.required],
       'character':[null,Validators.required],
       'crown':[null,Validators.required],
+      'steam-id':["",Validators.required],
     });
 
     this.primaryWeapon = this.noneWeapon;
     this.secondaryWeapon = this.noneWeapon;
     this.selectedMutations = [];
-    dailyWeeklyData.getWeeklyInfo().subscribe(
-      
+    gameData.getWeeklyInfo().subscribe(
       (data)=>{
         this.weekly_data=data;
         if (!this.weekly_data.enabled)
         this.disableWeekly();}
-      
-      
       );
   
+      gameData.getDailyInfo().subscribe(
+        (data)=>{
+          this.daily_data=data;
+          console.log(this.daily_data);
+         }
+        );
+    
+     
    }
 
 
@@ -295,12 +302,12 @@ export class GameFormComponent implements OnInit {
     this.errorMessage = "";
     this.assertConsistentData();
     if (this.getLastHit()==null){
-      this.errorMessage = "Error: Last Hit/Killed By required";
+      this.errorMessage = "Error: Last Hit/Killed By required.";
       valid = false;
     }
 
-    if(this.primaryWeapon==this.noneWeapon && this.secondaryWeapon==this.noneWeapon && this.getSelectedCharacter().id!=CHICKEN_ID){
-      this.errorMessage = "Error: The only character that can end without weapons is Chicken";
+    if((this.primaryWeapon==this.noneWeapon || this.secondaryWeapon==this.noneWeapon) && this.getSelectedCharacter().id!=CHICKEN_ID){
+      this.errorMessage = "Error: Every character except 'Chicken' must end with two weapons.";
       valid = false;
     }
     let mutLeft = this.getMutationsLeft();
@@ -310,19 +317,39 @@ export class GameFormComponent implements OnInit {
     }
 
     if(mutLeft<0){
-      this.errorMessage = "Error: Selected too many mutations";
+      this.errorMessage = "Error: Selected too many mutations.";
       valid = false;
     }
     
+
+    
     if(!this.getAvailableSubareas().includes(this.getEndingArea())){
-      this.errorMessage = "Error: You must select a subarea";
+      this.errorMessage = "Error: You must select a subarea.";
       valid = false;
     }
+
+    
+   
     if(valid){
-      this.openConfirmationBox();
+      if (this.getGameType()===GameTypeEnum.DAILY){
+         this.gameData.hasPlayedDaily(this.daily_data.seq,this.getSteamID()).subscribe((data)=>
+         {if(data.played){
+           this.errorMessage = "Error: You have already played the daily. Wait till tomorrow to use the hack again.";
+            valid = false;
+         }else{
+          this.openConfirmationBox();
+         }
+        });
+      }else{
+        this.openConfirmationBox();
+      }
+     
     }
 
 
+  }
+  getSteamID(): string {
+    return this.deadForm.get("steam-id").value;
   }
   openConfirmationBox(){
     const modalRef = this.modalService.open(ConfirmationBoxComponent, { size: 'lg' });
@@ -365,8 +392,5 @@ export class GameFormComponent implements OnInit {
     return getNumOfRemainingMutations(this.getNumOfAllowedMutations(),this.selectedMutations);
   }
 
-  typeOf(x){
-    return typeof(x);
-  }
 
 }
