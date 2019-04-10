@@ -284,6 +284,7 @@ export interface FinalData{
     bskin:boolean,
     seq:number,
     loop:number,
+    steam_id:string
 }
 
 function getArea(loop:number,area:number,subarea:number):ImprovedArea{

@@ -76,4 +76,8 @@ export class ConfirmationBoxComponent implements OnInit {
     return this.data.mutations;
   }
 
+  getSteamID(){
+    return this.data.steam_id;
+  }
+
 }

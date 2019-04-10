@@ -3,7 +3,7 @@
 <div id="game-form">
 <form id="form" [formGroup]="deadForm">
   <div id="daily-weekly-selector">
-    Game Type:
+    Game Type: {{debugBinary()}}<br/>{{debugEncrypted()}}
     <span id="option-daily">
     <input type="radio" id="inp-option-daily" name="type" [value]="GameType.DAILY" formControlName="type">
     <label for="inp-option-daily">Daily</label>

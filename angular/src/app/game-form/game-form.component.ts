@@ -6,7 +6,7 @@ import {WeaponSelectorModal} from '../weapon-selector/weapon-selector.component'
 import {MutationSelectorComponent} from '../mutation-selector/mutation-selector.component';
 import {GameDataService,WeeklyInfo, DailyInfo} from '../weekly-data.service';
 import {ConfirmationBoxComponent} from '../confirmation-box/confirmation-box.component';
-
+import {GameEncryptionService} from 'src/app/game-encryption.service';
 
 const CROWN_OF_DESTINY_ID = 8;
 const CHICKEN_ID = 9;
@@ -38,7 +38,7 @@ export class GameFormComponent implements OnInit {
   deadForm:FormGroup;
 
                     
-  constructor(private fb:FormBuilder,private modalService: NgbModal,private gameData: GameDataService) {
+  constructor(private fb:FormBuilder,private modalService: NgbModal,private gameData: GameDataService,private gameEncryption:GameEncryptionService) {
     
     this.deadForm = fb.group({
       'deadArea':[1,Validators.required], 
@@ -246,7 +246,30 @@ export class GameFormComponent implements OnInit {
     
     return difficulty;
   }
+
+  debugBinary(){
+    let area = this.getEndingArea();
+    let data:FinalData = {area:area.area,subarea:area.subarea,loop:area.loop,bskin:this.hasBskin(),charlevel:this.getNumOfAllowedMutations()+1,
+    character:this.getSelectedCharacter(),crown:this.getSelectedCrown(),kills:this.getKills(),seq:null,lasthit:this.getLastHit(),
+  mutations:this.selectedMutations,primaryWeapon:this.primaryWeapon,secondaryWeapon:this.secondaryWeapon,type:this.getGameType(),
+  win:false,steam_id:this.getSteamID()};
+    console.log( this.gameEncryption.dataToBinary(data));
+  return this.gameEncryption.dataToBinary(data);
+  }
  
+debugEncrypted(){
+  console.log("PePO");
+  let area = this.getEndingArea();
+  let data:FinalData = {area:area.area,subarea:area.subarea,loop:area.loop,bskin:this.hasBskin(),charlevel:this.getNumOfAllowedMutations()+1,
+  character:this.getSelectedCharacter(),crown:this.getSelectedCrown(),kills:this.getKills(),seq:null,lasthit:this.getLastHit(),
+mutations:this.selectedMutations,primaryWeapon:this.primaryWeapon,secondaryWeapon:this.secondaryWeapon,type:this.getGameType(),
+win:false,steam_id:this.getSteamID()};
+
+let binary = this.gameEncryption.dataToBinary(data);
+console.log( this.gameEncryption.encryptBinary(binary));
+return this.gameEncryption.encryptBinary(binary);
+}
+
   getAvailableWeapons(){
     let weapons = [];
     let difficulty = this.getDifficulty();
@@ -357,7 +380,7 @@ export class GameFormComponent implements OnInit {
     let data:FinalData = {area:area.area,subarea:area.subarea,loop:area.loop,bskin:this.hasBskin(),charlevel:this.getNumOfAllowedMutations()+1,
     character:this.getSelectedCharacter(),crown:this.getSelectedCrown(),kills:this.getKills(),seq:null,lasthit:this.getLastHit(),
   mutations:this.selectedMutations,primaryWeapon:this.primaryWeapon,secondaryWeapon:this.secondaryWeapon,type:this.getGameType(),
-  win:false};
+  win:false,steam_id:this.getSteamID()};
 
   modalRef.componentInstance.data = data;
 
