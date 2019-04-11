@@ -64,7 +64,6 @@ export class GameFormComponent implements OnInit {
       gameData.getDailyInfo().subscribe(
         (data)=>{
           this.daily_data=data;
-          console.log(this.daily_data);
          }
         );
     

@@ -54,14 +54,73 @@ app.post('/api/played-daily', (req,res)=>{
 res.status(200).send({
 	played: !(Object.keys(body.entries).length===0)
 });
- 
+ })});
 
+app.post('api/send/daily-initial', (req,res)=>{
+	let steam_id = req.body.steam_id;
+	let binary = req.body.binary;
 
-})
+	let header = {
+    'User-Agent': 'GameMaker HTTP',
+    'Accept-Encoding': "",
+    
+    "Host":"tb-api.xyz",
+    "Cache-Control":"no-cache"
+    }
 
+	request.post({url:"http://tb-api.xyz/set/daily",headers:header}, {"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
+	"s":steam_id,"d":binary, "k":"-1"}, 
+		(error:any, apiRes:any, body:any)=>{
+				return {"success":1}
+
+	});
 
 
 });
+
+app.post('api/send/daily', (req,res)=>{
+	let steam_id = req.body.steam_id;
+	let binary = req.body.binary;
+	let kills = req.body.kills;
+
+	let header = {
+    'User-Agent': 'GameMaker HTTP',
+    'Accept-Encoding': "",
+    
+    "Host":"tb-api.xyz",
+    "Cache-Control":"no-cache"
+    }
+
+	request.post({url:"http://tb-api.xyz/set/daily",headers:header}, {"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
+	"s":steam_id,"d":binary, "k":kills.toString()}, 
+		(error:any, apiRes:any, body:any)=>{
+				return {"success":1}
+
+	});
+});
+
+app.post('api/send/weekly', (req,res)=>{
+	let steam_id = req.body.steam_id;
+	let binary = req.body.binary;
+	let kills = req.body.kills;
+
+	let header = {
+    'User-Agent': 'GameMaker HTTP',
+    'Accept-Encoding': "",
+    
+    "Host":"tb-api.xyz",
+    "Cache-Control":"no-cache"
+    }
+
+	request.post({url:"http://tb-api.xyz/set/weekly",headers:header}, {"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
+	"s":steam_id,"d":binary, "k":kills.toString()}, 
+		(error:any, apiRes:any, body:any)=>{
+				return {"success":1}
+
+	});
+});
+
+
   
 app.get('/api/dailydata', (req, res) => {
 	

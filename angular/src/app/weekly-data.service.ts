@@ -64,6 +64,37 @@ export class GameDataService {
     return this.http.post<{played:boolean}>("api/played-daily",data);
 }
 
+
+  sendInitialDaily(steam_id:string, binary:string):Observable<{success:number}>{
+    let data = {
+      steam_id: steam_id,
+      binary:binary
+    }
+    return this.http.post<{success:number}>("api/send/daily-initial",data);
+  }
+
+  sendDaily(steam_id:string, kills:string, binary:string){
+     let data = {
+       steam_id:steam_id,
+       kills:kills,
+       binary:binary
+     }
+
+     return this.http.post<{success:number}>("api/send/daily",data);
+
+  }
+
+  sendWeekly(steam_id:string, kills:string, binary:string){
+    let data = {
+      steam_id:steam_id,
+      kills:kills,
+      binary:binary
+    }
+
+    return this.http.post<{success:number}>("api/send/weekly",data);
+
+ }
+
 }
 
 

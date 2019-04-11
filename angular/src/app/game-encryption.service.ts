@@ -57,6 +57,44 @@ export class GameEncryptionService {
     return binary;
   }
 
+  getInitialDailyBinary(data:FinalData){
+        let binary = "0".repeat(28); //Mutations
+        
+        let char = this.addBinaryOffsetIfNeeded(data.character.id.toString(2),4);
+        binary+=char;
+
+        let lasthit = this.addBinaryOffsetIfNeeded("0",16);
+        binary+=lasthit;
+
+        let area = this.addBinaryOffsetIfNeeded("1",8);
+        binary+=area;
+
+        let subarea = this.addBinaryOffsetIfNeeded("1",4);
+        binary+=subarea;
+
+        let crown = this.addBinaryOffsetIfNeeded("0",8);
+        binary += crown;
+
+        let wep = this.addBinaryOffsetIfNeeded(data.character.startingWeapon.id.toString(2),16);
+        binary += wep;
+
+        let bwep = this.addBinaryOffsetIfNeeded("0",16);
+        binary+=bwep;
+
+        let skin = data.bskin ? "1" : "0";
+        binary+=skin;
+
+        let ultra = this.addBinaryOffsetIfNeeded('0',2);
+        binary+=ultra;
+
+        let level = this.addBinaryOffsetIfNeeded('1',6);
+        binary+=level;
+
+        binary += this.addBinaryOffsetIfNeeded('0',6);
+
+        return binary;
+  }
+
 
 
 
