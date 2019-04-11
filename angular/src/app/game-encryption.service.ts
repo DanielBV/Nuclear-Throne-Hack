@@ -43,14 +43,14 @@ export class GameEncryptionService {
     let charlevel = this.addBinaryOffsetIfNeeded(data.charlevel.toString(2),6);
     binary += charlevel;
 
-    let loop = this.addBinaryOffsetIfNeeded(data.loop.toString(2),6);
+    let loop = this.addBinaryOffsetIfNeeded(data.loop.toString(2),8);
     binary+=loop;
 
     let win = data.win ? "1" : "0";
     binary+=win;
-
+    
     binary+="0"; 
-
+  
 
 
 

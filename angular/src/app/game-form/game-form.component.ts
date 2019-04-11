@@ -247,28 +247,6 @@ export class GameFormComponent implements OnInit {
     return difficulty;
   }
 
-  debugBinary(){
-    let area = this.getEndingArea();
-    let data:FinalData = {area:area.area,subarea:area.subarea,loop:area.loop,bskin:this.hasBskin(),charlevel:this.getNumOfAllowedMutations()+1,
-    character:this.getSelectedCharacter(),crown:this.getSelectedCrown(),kills:this.getKills(),seq:null,lasthit:this.getLastHit(),
-  mutations:this.selectedMutations,primaryWeapon:this.primaryWeapon,secondaryWeapon:this.secondaryWeapon,type:this.getGameType(),
-  win:false,steam_id:this.getSteamID()};
-    console.log( this.gameEncryption.dataToBinary(data));
-  return this.gameEncryption.dataToBinary(data);
-  }
- 
-debugEncrypted(){
-  console.log("PePO");
-  let area = this.getEndingArea();
-  let data:FinalData = {area:area.area,subarea:area.subarea,loop:area.loop,bskin:this.hasBskin(),charlevel:this.getNumOfAllowedMutations()+1,
-  character:this.getSelectedCharacter(),crown:this.getSelectedCrown(),kills:this.getKills(),seq:null,lasthit:this.getLastHit(),
-mutations:this.selectedMutations,primaryWeapon:this.primaryWeapon,secondaryWeapon:this.secondaryWeapon,type:this.getGameType(),
-win:false,steam_id:this.getSteamID()};
-
-let binary = this.gameEncryption.dataToBinary(data);
-console.log( this.gameEncryption.encryptBinary(binary));
-return this.gameEncryption.encryptBinary(binary);
-}
 
   getAvailableWeapons(){
     let weapons = [];
@@ -390,7 +368,7 @@ return this.gameEncryption.encryptBinary(binary);
   getKills():number{
     let minKills = this.getEndingArea().minKills;
     let maxKills = this.getEndingArea().maxKills;
-
+    
     return Math.floor(Math.random() * minKills) + maxKills;
   }
   getLastHit():Enemy{
