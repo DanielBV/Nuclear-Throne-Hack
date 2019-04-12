@@ -8,6 +8,7 @@ import {GameDataService,WeeklyInfo, DailyInfo} from '../weekly-data.service';
 import {ConfirmationBoxComponent} from '../confirmation-box/confirmation-box.component';
 import {GameEncryptionService} from 'src/app/game-encryption.service';
 
+
 const CROWN_OF_DESTINY_ID = 8;
 const CHICKEN_ID = 9;
 
@@ -279,6 +280,7 @@ export class GameFormComponent implements OnInit {
   }
 
   openSecondaryWeaponSelector() {
+
     const modalRef = this.modalService.open(WeaponSelectorModal, { size: 'lg' });
     modalRef.componentInstance.weapons = this.getAvailableWeapons();
     modalRef.componentInstance.headerText= "Select Secondary Weapon";
@@ -298,9 +300,16 @@ export class GameFormComponent implements OnInit {
   }
 
   enterPressed(){
+   
     let valid = true;
     this.errorMessage = "";
     this.assertConsistentData();
+
+    if(this.daily_data===undefined){
+      this.errorMessage = "Error: Can't access the daily data. Try to reload the page";
+      return;
+    }
+    
     if (this.getLastHit()==null){
       this.errorMessage = "Error: Last Hit/Killed By required.";
       valid = false;
@@ -333,7 +342,13 @@ export class GameFormComponent implements OnInit {
     if(valid){
       if (this.getGameType()===GameTypeEnum.DAILY){
          this.gameData.hasPlayedDaily(this.daily_data.seq,this.getSteamID()).subscribe((data)=>
-         {if(data.played){
+         {
+           if(data.success==0){
+             console.log(data.errorString);
+             this.errorMessage = "Error: Can't acces the api. Try to reload the page.";
+             return;
+           }
+           if(data.played){
            this.errorMessage = "Error: You have already played the daily. Wait till tomorrow to use the hack again.";
            valid = false;
          }else{
@@ -352,7 +367,7 @@ export class GameFormComponent implements OnInit {
     return this.deadForm.get("steam-id").value.trim();
   }
   openConfirmationBox(){
-    const modalRef = this.modalService.open(ConfirmationBoxComponent, { size: 'lg' });
+    const modalRef = this.modalService.open(ConfirmationBoxComponent, { size: 'lg',backdrop:'static',keyboard:false });
     let area = this.getEndingArea();
     let data:FinalData = {area:area.area,subarea:area.subarea,loop:area.loop,bskin:this.hasBskin(),charlevel:this.getNumOfAllowedMutations()+1,
     character:this.getSelectedCharacter(),crown:this.getSelectedCrown(),kills:this.getKills(),seq:null,lasthit:this.getLastHit(),

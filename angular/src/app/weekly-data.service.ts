@@ -56,12 +56,12 @@ export class GameDataService {
   }
 
 
-  hasPlayedDaily(seq:string,steam_id:string):Observable<{played:boolean}>{
+  hasPlayedDaily(seq:string,steam_id:string):Observable<{played:boolean,success:number,errorString:string}>{
     let data = {
       seq:seq,
       steam_id:steam_id
     };
-    return this.http.post<{played:boolean}>("/api/played-daily",data);
+    return this.http.post<{played:boolean,success:number,errorString:string}>("/api/played-daily",data);
 }
 
 

@@ -18,7 +18,10 @@ app.get('/api/weeklydata', (req, res) => {
 	
 	if (weeklyCache===null){
 		request("http://tb-api.xyz/seed/weekly", { json: true }, (err:any, apiRes:any, body:any) => {
-		if (err) { return console.log(err); }
+		if (err) {
+			res.status(200).send({success:0, errorString:`There was an error in the request to the tb api: ${err} `})
+			return
+		}
 		weeklyCache=body;
 		console.log(body);
 		console.log(body.url);
@@ -49,10 +52,11 @@ app.post('/api/played-daily', (req,res)=>{
   }
 }, (error:any, apiRes:any, body:any) => {
   if (error) {
-    console.error(error)
+    res.status(200).send({success:0, errorString:`There was an error in the request to the tb api: ${error} `, })
     return
   }
 res.status(200).send({
+	success:1,
 	played: !(Object.keys(body.entries).length===0)
 });
  })});
@@ -137,7 +141,7 @@ app.get('/api/dailydata', (req, res) => {
 	
 	if (dailyCache===null){
 		request("http://tb-api.xyz/seed/daily", { json: true }, (err:any, apiRes:any, body:any) => {
-		if (err) { return console.log(err); }
+		if (err) {res.status(200).send({success:0, errorString:`There was an error in the request to the tb api: ${err} `, });return; }
 		dailyCache=body;
 		console.log(body);
 		console.log(body.url);

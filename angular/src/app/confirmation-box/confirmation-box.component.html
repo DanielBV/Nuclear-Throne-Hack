@@ -30,20 +30,26 @@
     </div>
   </div>
 
-<div id="submit">
-  <button id="enter-button" (click)="confirm()"class="btn btn-primary confirm">Confirm</button>
+
+
+<div *ngIf="!finished" id="submit">
+  <button class="enter-button" (click)="confirm()"class="btn btn-primary confirm" [disabled]="confirmed" >Confirm</button>
 </div>
 
 <div *ngIf="confirmed">
-  <div *ngIf="daily">
-   
+  <div class="daily-confirmed"  *ngIf="daily && !finished">
+    <p>
     The first http petition has been sent.<br/>
     You must wait {{sleeptime}} to send the second petition.<br/>
     If you leave, you will get -1 kills.
+  </p>
   </div>
-
-
 </div>
+
+<div *ngIf="finished">
+    <p  class="text-success"> The petition has been sent. Check the leaderboard (<a href="https://thronebutt.com/">https://thronebutt.com/</a>) to see if it worked</p>
+    <button class="enter-button" (click)="close()"class="btn btn-primary confirm">Close</button>
+  </div>
 
 
 </div>

@@ -17,11 +17,13 @@ export class ConfirmationBoxComponent implements OnInit {
   _data:FinalData;
   confirmed:boolean;
   daily:boolean;
+  finished: boolean;
   sleeptime: number;
   constructor(public activeModal: NgbActiveModal,private encryptor:GameEncryptionService, private api:GameDataService) { }
 
   ngOnInit() {
     this.confirmed = false;
+    this.finished = false;
   }
 
 
@@ -92,8 +94,9 @@ export class ConfirmationBoxComponent implements OnInit {
 
   calculateSleepTime(){
     let loop = this.data.loop;
-    let timetosleepmin=8*60+17*60*loop
-    let timetosleepmax=11*60+23*60* loop
+    let area = this.data.area;
+    let timetosleepmin=70*area+70*7*loop;
+    let timetosleepmax=95*area + 95 * 7 * loop;
     
    return Math.floor(Math.random() * (timetosleepmax-timetosleepmin+1)) + timetosleepmin;
   }
@@ -112,6 +115,7 @@ export class ConfirmationBoxComponent implements OnInit {
         map((x) => { 
           if (this.sleeptime>0){this.sleeptime -= 1;}
           else{
+            this.finished = true;
             p.unsubscribe();
             let post_binary = this.encryptor.dataToBinary(this.data);
             let post_encoded_binary = this.encryptor.encryptBinary(post_binary);
@@ -121,13 +125,18 @@ export class ConfirmationBoxComponent implements OnInit {
       })
       ).subscribe();
       }else{
+        this.finished = true;
         let binary = this.encryptor.dataToBinary(this.data);
         let encoded_binary = this.encryptor.encryptBinary(binary);
 
-        this.api.sendWeekly(this.data.steam_id, this.data.kills.toString(),encoded_binary);
+        this.api.sendWeekly(this.data.steam_id, this.data.kills.toString(),encoded_binary).subscribe();
+      
       }
     }
  
+    close(){
+      this.activeModal.close();
+    }
 
 }
 
