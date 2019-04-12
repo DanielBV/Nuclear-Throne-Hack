@@ -28,7 +28,7 @@ export class GameDataService {
   constructor(private http: HttpClient) {}
 
   getWeeklyInfo(): Observable<WeeklyInfo>{
-    return this.http.get("api/weeklydata").pipe(
+    return this.http.get("/api/weeklydata").pipe(
       mergeMap(
        
         (data)=>{
@@ -47,7 +47,7 @@ export class GameDataService {
   }
 
   getDailyInfo():Observable<DailyInfo>{
-    return this.http.get("api/dailydata").pipe(
+    return this.http.get("/api/dailydata").pipe(
       mergeMap(
         (data)=>{
         data =data["daily"];
@@ -61,7 +61,7 @@ export class GameDataService {
       seq:seq,
       steam_id:steam_id
     };
-    return this.http.post<{played:boolean}>("api/played-daily",data);
+    return this.http.post<{played:boolean}>("/api/played-daily",data);
 }
 
 
@@ -70,7 +70,7 @@ export class GameDataService {
       steam_id: steam_id,
       binary:binary
     }
-    return this.http.post<{success:number}>("api/send/daily-initial",data);
+    return this.http.post<{success:number}>("/api/send/daily-initial",data);
   }
 
   sendDaily(steam_id:string, kills:string, binary:string){
@@ -80,7 +80,7 @@ export class GameDataService {
        binary:binary
      }
 
-     return this.http.post<{success:number}>("api/send/daily",data);
+     return this.http.post<{success:number}>("/api/send/daily",data);
 
   }
 

@@ -1,6 +1,11 @@
 import { Component, OnInit,Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { FinalData } from '../model';
+import { FinalData, GameTypeEnum } from '../model';
+import {GameEncryptionService} from 'src/app/game-encryption.service';
+import {GameDataService} from 'src/app/weekly-data.service';
+
+import { interval } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-confirmation-box',
@@ -10,14 +15,19 @@ import { FinalData } from '../model';
 export class ConfirmationBoxComponent implements OnInit {
 
   _data:FinalData;
-  constructor(public activeModal: NgbActiveModal) { }
+  confirmed:boolean;
+  daily:boolean;
+  sleeptime: number;
+  constructor(public activeModal: NgbActiveModal,private encryptor:GameEncryptionService, private api:GameDataService) { }
 
   ngOnInit() {
+    this.confirmed = false;
   }
 
 
   @Input() set data(value:FinalData){
     this._data =value;
+    this.daily = value.type === GameTypeEnum.DAILY;
   }
 
   get data(){
@@ -80,4 +90,44 @@ export class ConfirmationBoxComponent implements OnInit {
     return this.data.steam_id;
   }
 
+  calculateSleepTime(){
+    let loop = this.data.loop;
+    let timetosleepmin=8*60+17*60*loop
+    let timetosleepmax=11*60+23*60* loop
+    
+   return Math.floor(Math.random() * (timetosleepmax-timetosleepmin+1)) + timetosleepmin;
+  }
+
+  confirm(){
+    this.confirmed = true;
+
+    if (this.daily){
+      let binary = this.encryptor.getInitialDailyBinary(this.data);
+      let encoded_binary = this.encryptor.encryptBinary(binary);
+      this.api.sendInitialDaily(this.data.steam_id, encoded_binary).subscribe();
+
+      this.sleeptime = this.calculateSleepTime();
+
+      let p = interval(1000).pipe(
+        map((x) => { 
+          if (this.sleeptime>0){this.sleeptime -= 1;}
+          else{
+            p.unsubscribe();
+            let post_binary = this.encryptor.dataToBinary(this.data);
+            let post_encoded_binary = this.encryptor.encryptBinary(post_binary);
+            this.api.sendDaily(this.data.steam_id, this.data.kills.toString(), post_encoded_binary).subscribe();     
+          }
+      
+      })
+      ).subscribe();
+      }else{
+        let binary = this.encryptor.dataToBinary(this.data);
+        let encoded_binary = this.encryptor.encryptBinary(binary);
+
+        this.api.sendWeekly(this.data.steam_id, this.data.kills.toString(),encoded_binary);
+      }
+    }
+ 
+
 }
+

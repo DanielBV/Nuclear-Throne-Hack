@@ -335,11 +335,11 @@ export class GameFormComponent implements OnInit {
          this.gameData.hasPlayedDaily(this.daily_data.seq,this.getSteamID()).subscribe((data)=>
          {if(data.played){
            this.errorMessage = "Error: You have already played the daily. Wait till tomorrow to use the hack again.";
-            valid = false;
+           valid = false;
          }else{
           this.openConfirmationBox();
          }
-        });
+        }); 
       }else{
         this.openConfirmationBox();
       }
@@ -349,7 +349,7 @@ export class GameFormComponent implements OnInit {
 
   }
   getSteamID(): string {
-    return this.deadForm.get("steam-id").value;
+    return this.deadForm.get("steam-id").value.trim();
   }
   openConfirmationBox(){
     const modalRef = this.modalService.open(ConfirmationBoxComponent, { size: 'lg' });
@@ -360,15 +360,15 @@ export class GameFormComponent implements OnInit {
   win:false,steam_id:this.getSteamID()};
 
   modalRef.componentInstance.data = data;
-
-    /** TODO getKills y seq */
   }
 
   getKills():number{
     let minKills = this.getEndingArea().minKills;
     let maxKills = this.getEndingArea().maxKills;
     
-    return Math.floor(Math.random() * minKills) + maxKills;
+    let kills = Math.floor(Math.random() * (maxKills-minKills+1)) + minKills;
+
+    return kills; 
   }
   getLastHit():Enemy{
     return this.deadForm.get("killedBy").value;

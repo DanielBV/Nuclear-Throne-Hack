@@ -3,6 +3,7 @@ let app = express();
 let server = require("http").Server(app);
 const bodyParser = require("body-parser");
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
@@ -38,7 +39,7 @@ app.get('/api/weeklydata', (req, res) => {
 app.post('/api/played-daily', (req,res)=>{
 	let seq = req.body.seq;
 	let steam_id = req.body.steam_id;
-
+	console.log("Starting played-daily");
 	request.post('http://tb-api.xyz/get/daily', {
   json: {
 	"lb":seq,
@@ -56,7 +57,7 @@ res.status(200).send({
 });
  })});
 
-app.post('api/send/daily-initial', (req,res)=>{
+app.post('/api/send/daily-initial', (req,res)=>{
 	let steam_id = req.body.steam_id;
 	let binary = req.body.binary;
 
@@ -67,10 +68,15 @@ app.post('api/send/daily-initial', (req,res)=>{
     "Host":"tb-api.xyz",
     "Cache-Control":"no-cache"
     }
-
-	request.post({url:"http://tb-api.xyz/set/daily",headers:header}, {"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
-	"s":steam_id,"d":binary, "k":"-1"}, 
+		console.log("Sending pre-daily");
+	request.post({url:"http://tb-api.xyz/set/daily",headers:header,json:{"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
+	"s":steam_id,"d":binary, "k":"-1"}},
 		(error:any, apiRes:any, body:any)=>{
+			console.log(error);
+			console.log(apiRes)
+			console.log("------------- body ")
+			console.log(body);
+
 				return {"success":1}
 
 	});
@@ -78,7 +84,33 @@ app.post('api/send/daily-initial', (req,res)=>{
 
 });
 
-app.post('api/send/daily', (req,res)=>{
+app.post('/api/send/daily', (req,res)=>{
+	let steam_id = req.body.steam_id;
+	let binary = req.body.binary;
+	let kills = req.body.kills;
+
+	console.log("Sending daily");
+	let header = {
+    'User-Agent': 'GameMaker HTTP',
+    'Accept-Encoding': "",
+    
+    "Host":"tb-api.xyz",
+    "Cache-Control":"no-cache"
+    }
+
+	request.post({url:"http://tb-api.xyz/set/daily",headers:header, json:{"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
+	"s":steam_id,"d":binary, "k":kills.toString()} }, 
+		(error:any, apiRes:any, body:any)=>{
+			console.log(apiRes)
+			console.log("------------- body ")
+			console.log(body);
+
+				return {"success":1}
+
+	});
+});
+
+app.post('/api/send/weekly', (req,res)=>{
 	let steam_id = req.body.steam_id;
 	let binary = req.body.binary;
 	let kills = req.body.kills;
@@ -91,29 +123,8 @@ app.post('api/send/daily', (req,res)=>{
     "Cache-Control":"no-cache"
     }
 
-	request.post({url:"http://tb-api.xyz/set/daily",headers:header}, {"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
-	"s":steam_id,"d":binary, "k":kills.toString()}, 
-		(error:any, apiRes:any, body:any)=>{
-				return {"success":1}
-
-	});
-});
-
-app.post('api/send/weekly', (req,res)=>{
-	let steam_id = req.body.steam_id;
-	let binary = req.body.binary;
-	let kills = req.body.kills;
-
-	let header = {
-    'User-Agent': 'GameMaker HTTP',
-    'Accept-Encoding': "",
-    
-    "Host":"tb-api.xyz",
-    "Cache-Control":"no-cache"
-    }
-
-	request.post({url:"http://tb-api.xyz/set/weekly",headers:header}, {"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
-	"s":steam_id,"d":binary, "k":kills.toString()}, 
+	request.post({url:"http://tb-api.xyz/set/weekly",headers:header}, {json:{"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
+	"s":steam_id,"d":binary, "k":kills.toString()}}, 
 		(error:any, apiRes:any, body:any)=>{
 				return {"success":1}
 

@@ -34,5 +34,16 @@
   <button id="enter-button" (click)="confirm()"class="btn btn-primary confirm">Confirm</button>
 </div>
 
+<div *ngIf="confirmed">
+  <div *ngIf="daily">
+   
+    The first http petition has been sent.<br/>
+    You must wait {{sleeptime}} to send the second petition.<br/>
+    If you leave, you will get -1 kills.
+  </div>
+
+
+</div>
+
 
 </div>
