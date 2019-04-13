@@ -15,9 +15,15 @@ var weeklyCache:any = null;
 var dailyCache:any=null;
 
 app.get('/api/weeklydata', (req, res) => {
-	
+	let header = {
+    'User-Agent': 'GameMaker HTTP',
+    'Accept-Encoding': "",
+    
+    "Host":"tb-api.xyz",
+    "Cache-Control":"no-cache"
+    }
 	if (weeklyCache===null){
-		request("http://tb-api.xyz/seed/weekly", { json: true }, (err:any, apiRes:any, body:any) => {
+		request({url:"http://tb-api.xyz/seed/weekly?version=99r1",headers:header , json: true }, (err:any, apiRes:any, body:any) => {
 		if (err) {
 			res.status(200).send({success:0, errorString:`There was an error in the request to the tb api: ${err} `})
 			return
@@ -43,7 +49,14 @@ app.post('/api/played-daily', (req,res)=>{
 	let seq = req.body.seq;
 	let steam_id = req.body.steam_id;
 	console.log("Starting played-daily");
-	request.post('http://tb-api.xyz/get/daily', {
+	let header = {
+    'User-Agent': 'GameMaker HTTP',
+    'Accept-Encoding': "",
+    
+    "Host":"tb-api.xyz",
+    "Cache-Control":"no-cache"
+    }
+	request.post({url:'http://tb-api.xyz/get/daily',  headers:header,
   json: {
 	"lb":seq,
 	"s":steam_id,
@@ -74,7 +87,7 @@ app.post('/api/send/daily-initial', (req,res)=>{
     }
 		console.log("Sending pre-daily");
 	request.post({url:"http://tb-api.xyz/set/daily",headers:header,json:{"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
-	"s":steam_id,"d":binary, "k":"-1"}},
+	"s":steam_id,"d":binary, "k":"-1","version":"99r1"}},
 		(error:any, apiRes:any, body:any)=>{
 			console.log(error);
 			console.log(apiRes)
@@ -103,7 +116,7 @@ app.post('/api/send/daily', (req,res)=>{
     }
 
 	request.post({url:"http://tb-api.xyz/set/daily",headers:header, json:{"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
-	"s":steam_id,"d":binary, "k":kills.toString()} }, 
+	"s":steam_id,"d":binary, "k":kills.toString(),"version":"99r1"} }, 
 		(error:any, apiRes:any, body:any)=>{
 			console.log(apiRes)
 			console.log("------------- body ")
@@ -127,8 +140,8 @@ app.post('/api/send/weekly', (req,res)=>{
     "Cache-Control":"no-cache"
     }
 
-	request.post({url:"http://tb-api.xyz/set/weekly",headers:header}, {json:{"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
-	"s":steam_id,"d":binary, "k":kills.toString()}}, 
+	request.post({url:"http://tb-api.xyz/set/weekly",headers:header, json:{"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
+	"s":steam_id,"d":binary, "k":kills.toString(),"version":"99r1"}}, 
 		(error:any, apiRes:any, body:any)=>{
 				return {"success":1}
 
@@ -138,9 +151,15 @@ app.post('/api/send/weekly', (req,res)=>{
 
   
 app.get('/api/dailydata', (req, res) => {
-	
+	let header = {
+    'User-Agent': 'GameMaker HTTP',
+    'Accept-Encoding': "",
+    
+    "Host":"tb-api.xyz",
+    "Cache-Control":"no-cache"
+    }
 	if (dailyCache===null){
-		request("http://tb-api.xyz/seed/daily", { json: true }, (err:any, apiRes:any, body:any) => {
+		request({url:"http://tb-api.xyz/seed/daily?version=99r1",headers:header }, (err:any, apiRes:any, body:any) => {
 		if (err) {res.status(200).send({success:0, errorString:`There was an error in the request to the tb api: ${err} `, });return; }
 		dailyCache=body;
 		console.log(body);

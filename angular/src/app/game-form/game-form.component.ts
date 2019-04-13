@@ -105,7 +105,7 @@ export class GameFormComponent implements OnInit {
 
 
    assertConsistentData(){
-     let availableWeapons = this.getAvailableWeapons();
+     let availableWeapons = this.getAllAvailableWeapons();
      let crown = this.getSelectedCrown();
      if(this.primaryWeapon!==this.noneWeapon && !availableWeapons.includes(this.primaryWeapon)){
         this.primaryWeapon = this.noneWeapon;
@@ -248,7 +248,27 @@ export class GameFormComponent implements OnInit {
   }
 
 
-  getAvailableWeapons(){
+  getAvailablePrimaryWeapons(){
+    let weapons = this.getAllAvailableWeapons();
+
+    if(this.secondaryWeapon!=this.noneWeapon && this.secondaryWeapon.unique){
+      weapons.splice(weapons.indexOf(this.secondaryWeapon),1);
+    }
+
+    return weapons;
+  }
+
+  getAvailableSecondaryWeapons(){
+    let weapons = this.getAllAvailableWeapons();
+
+    if(this.primaryWeapon!=this.noneWeapon && this.primaryWeapon.unique){
+      weapons.splice(weapons.indexOf(this.primaryWeapon),1);
+    }
+
+    return weapons;
+  }
+
+  getAllAvailableWeapons(){
     let weapons = [];
     let difficulty = this.getDifficulty();
 
@@ -263,6 +283,8 @@ export class GameFormComponent implements OnInit {
     else if (this.getSelectedCharacter().startingWeapon !=null)
       weapons.splice(1, 0, this.getSelectedCharacter().startingWeapon);
 
+    
+
     return weapons;
     //TODO add specific character weapons
   }
@@ -271,7 +293,7 @@ export class GameFormComponent implements OnInit {
     const modalRef = this.modalService.open(WeaponSelectorModal, { size: 'lg' });
     modalRef.componentInstance.selectedWeapon = this.primaryWeapon;
     modalRef.componentInstance.headerText= "Select Primary Weapon";
-    modalRef.componentInstance.weapons = this.getAvailableWeapons();
+    modalRef.componentInstance.weapons = this.getAvailablePrimaryWeapons();
 
     modalRef.result.then((result) => {
       this.primaryWeapon = result;
@@ -282,7 +304,7 @@ export class GameFormComponent implements OnInit {
   openSecondaryWeaponSelector() {
 
     const modalRef = this.modalService.open(WeaponSelectorModal, { size: 'lg' });
-    modalRef.componentInstance.weapons = this.getAvailableWeapons();
+    modalRef.componentInstance.weapons = this.getAvailableSecondaryWeapons();
     modalRef.componentInstance.headerText= "Select Secondary Weapon";
     modalRef.componentInstance.selectedWeapon = this.secondaryWeapon;
     modalRef.result.then((result) => {
