@@ -13,6 +13,8 @@ const request = require('request');
 
 var weeklyCache:any = null;
 var dailyCache:any=null;
+var weeklyCacheUpdate:Date = null;
+var dailyCacheUpdate: Date = null;
 
 app.get('/api/weeklydata', (req, res) => {
 	let header = {
@@ -21,17 +23,24 @@ app.get('/api/weeklydata', (req, res) => {
     
     "Host":"tb-api.xyz",
     "Cache-Control":"no-cache"
-    }
-	if (weeklyCache===null){
+		}
+	let now = new Date();
+	if (weeklyCache===null || weeklyCacheUpdate.getTime()- now.getTime()<30000){
 		request({url:"http://tb-api.xyz/seed/weekly?version=99r1",headers:header , json: true }, (err:any, apiRes:any, body:any) => {
 		if (err) {
 			res.status(200).send({success:0, errorString:`There was an error in the request to the tb api: ${err} `})
 			return
 		}
-		weeklyCache=body;
 		console.log(body);
-		console.log(body.url);
-		console.log(body.explanation);
+
+		let time = body.time;
+	
+		if(time>30){ //Don't add it to cache if the next weekly is in less than 30 seconds
+			weeklyCache=body;
+			weeklyCacheUpdate = new Date();
+			weeklyCacheUpdate.setSeconds(weeklyCacheUpdate.getSeconds()+time);
+		}
+	
 		res.status(200).send({
 			success: 'true',
 			weekly: body,
@@ -89,12 +98,14 @@ app.post('/api/send/daily-initial', (req,res)=>{
 	request.post({url:"http://tb-api.xyz/set/daily",headers:header,json:{"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
 	"s":steam_id,"d":binary, "k":"-1","version":"99r1"}},
 		(error:any, apiRes:any, body:any)=>{
-			console.log(error);
-			console.log(apiRes)
-			console.log("------------- body ")
-			console.log(body);
-
-				return {"success":1}
+			if(error)
+			res.status(200).send({
+				success: 0,
+			});
+			else
+			res.status(200).send({
+				success: 1,
+			});
 
 	});
 
@@ -118,11 +129,14 @@ app.post('/api/send/daily', (req,res)=>{
 	request.post({url:"http://tb-api.xyz/set/daily",headers:header, json:{"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
 	"s":steam_id,"d":binary, "k":kills.toString(),"version":"99r1"} }, 
 		(error:any, apiRes:any, body:any)=>{
-			console.log(apiRes)
-			console.log("------------- body ")
-			console.log(body);
-
-				return {"success":1}
+			if(error)
+			res.status(200).send({
+				success: 0,
+			});
+			else
+			res.status(200).send({
+				success: 1,
+			});
 
 	});
 });
@@ -143,7 +157,14 @@ app.post('/api/send/weekly', (req,res)=>{
 	request.post({url:"http://tb-api.xyz/set/weekly",headers:header, json:{"key":"fKPkDl0aiTXtWygruoNDJKzl2MSPyTqg",
 	"s":steam_id,"d":binary, "k":kills.toString(),"version":"99r1"}}, 
 		(error:any, apiRes:any, body:any)=>{
-				return {"success":1}
+			if(error)
+			res.status(200).send({
+				success: 0,
+			});
+			else
+			res.status(200).send({
+				success: 1,
+			});
 
 	});
 });
@@ -157,14 +178,23 @@ app.get('/api/dailydata', (req, res) => {
     
     "Host":"tb-api.xyz",
     "Cache-Control":"no-cache"
-    }
-	if (dailyCache===null){
-		request({url:"http://tb-api.xyz/seed/daily?version=99r1",headers:header }, (err:any, apiRes:any, body:any) => {
+		}
+	let now = new Date();
+	if (dailyCache===null || dailyCacheUpdate.getTime()- now.getTime()<30000){
+		request({url:"http://tb-api.xyz/seed/daily?version=99r1",headers:header,json: true  }, (err:any, apiRes:any, body:any) => {
 		if (err) {res.status(200).send({success:0, errorString:`There was an error in the request to the tb api: ${err} `, });return; }
-		dailyCache=body;
+		
+
+		let time = body.time;
+		if(time>30){ //Don't add it to cache if the next daily is in less than 30 seconds
+			dailyCache=body;
+			dailyCacheUpdate = new Date();
+			dailyCacheUpdate.setSeconds(dailyCacheUpdate.getSeconds()+time);
+		}
+	
+
 		console.log(body);
-		console.log(body.url);
-		console.log(body.explanation);
+
 		res.status(200).send({
 			success: 'true',
 			weekly: body,
