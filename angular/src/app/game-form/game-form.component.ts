@@ -117,7 +117,7 @@ export class GameFormComponent implements OnInit {
      if(crown!==this.noneCrown && !this.getAvailableCrowns().includes(crown)){ 
         this.setSelectedCrown(this.noneCrown);
 
-     if(!this.getEndingArea().enemies.includes(this.deadForm.get("killedBy").value))
+     if(!this.getSelectedEndingArea().enemies.includes(this.deadForm.get("killedBy").value))
         this.deadForm.setValue(null,{emitEvent:false});
       
    }
@@ -133,13 +133,13 @@ export class GameFormComponent implements OnInit {
    }
 
    getDeadArea():number{
-      return this.deadForm.get("deadArea").value; //TODO Refactor confusing with  getEndingArea
+      return this.deadForm.get("deadArea").value; 
    }
 
    getGameType():GameTypeEnum{
      return this.deadForm.get("type").value;
    }
-   /** TODO: Añadir armas que solo se pueden coger una vez (no se pueden tener como primary y secondary weapon a la vez) */
+
 
    
   ngOnInit() {
@@ -176,12 +176,12 @@ export class GameFormComponent implements OnInit {
     return this.deadForm.get("deadSubarea").value.enemies;
   }
 
-  getEndingArea():ImprovedArea{
+  getSelectedEndingArea():ImprovedArea{
    
       return this.deadForm.get("deadSubarea").value; 
   }
   getAvailableCrowns():Crown[]{
-    let area = this.getEndingArea();
+    let area = this.getSelectedEndingArea();
     let crowns = [];
     for(let i=0;i<this.crowns.length;i++){
       if (this.areaIsAfter(area,this.crowns[i].available_after,false))
@@ -229,8 +229,8 @@ export class GameFormComponent implements OnInit {
   }
   getDifficulty():number{
     
-      let difficulty = this.getEndingArea().baseDifficulty;
-      //TODO Make more explicit the character is robot. Enums don't work with object
+      let difficulty = this.getSelectedEndingArea().baseDifficulty;
+   
 
       if (this.getSelectedCharacter().id == 8) //Robot's passive reduces the difficulty number for weapon drops by 1
         difficulty+=1
@@ -286,7 +286,7 @@ export class GameFormComponent implements OnInit {
     
 
     return weapons;
-    //TODO add specific character weapons
+    
   }
 
   openPrimaryWeaponSelector() {
@@ -354,7 +354,7 @@ export class GameFormComponent implements OnInit {
     
 
     
-    if(!this.getAvailableSubareas().includes(this.getEndingArea())){
+    if(!this.getAvailableSubareas().includes(this.getSelectedEndingArea())){
       this.errorMessage = "Error: You must select a subarea.";
       valid = false;
     }
@@ -390,7 +390,7 @@ export class GameFormComponent implements OnInit {
   }
   openConfirmationBox(){
     const modalRef = this.modalService.open(ConfirmationBoxComponent, { size: 'lg',backdrop:'static',keyboard:false });
-    let area = this.getEndingArea();
+    let area = this.getSelectedEndingArea();
     let data:FinalData = {area:area.area,subarea:area.subarea,loop:area.loop,bskin:this.hasBskin(),charlevel:this.getNumOfAllowedMutations()+1,
     character:this.getSelectedCharacter(),crown:this.getSelectedCrown(),kills:this.getKills(),seq:null,lasthit:this.getLastHit(),
   mutations:this.selectedMutations,primaryWeapon:this.primaryWeapon,secondaryWeapon:this.secondaryWeapon,type:this.getGameType(),
@@ -400,8 +400,8 @@ export class GameFormComponent implements OnInit {
   }
 
   getKills():number{
-    let minKills = this.getEndingArea().minKills;
-    let maxKills = this.getEndingArea().maxKills;
+    let minKills = this.getSelectedEndingArea().minKills;
+    let maxKills = this.getSelectedEndingArea().maxKills;
     
     let kills = Math.floor(Math.random() * (maxKills-minKills+1)) + minKills;
 
@@ -416,7 +416,7 @@ export class GameFormComponent implements OnInit {
   }
 
   getNumOfAllowedMutations():number{
-    let base =  this.getEndingArea().mutations;
+    let base =  this.getSelectedEndingArea().mutations;
 
     if (this.getSelectedCrown().id == CROWN_OF_DESTINY_ID)
         base+=1;

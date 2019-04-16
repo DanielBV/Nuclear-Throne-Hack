@@ -47,7 +47,7 @@ export interface Crown {
 
 let firstCrownVault = getArea(0,3,2);
 let postLoopCrownVault = getArea(1,3,2);
-/* TODO get Areas instead of creating new area objects */
+
 /** Base difficulty for crowns is 1 because getting a crown implies going through the crown vault portal. Increasing the difficulty in 1. */
 export var crowns: Crown[] = [{ id: 1, available_after: { area: 0, subarea: 0, loop: 0, enemies: [], baseDifficulty: 0, mutations:0,minKills:0,maxKills:0}, name: "None" },
 { id: 2, available_after: firstCrownVault, name: "Crown of Death" },
@@ -73,7 +73,7 @@ export interface Character {
     name: string,
 }
 
-/** TODO Only allow no weapons if the selected character is Chicken **/
+
 
 
 export interface Weapon {
